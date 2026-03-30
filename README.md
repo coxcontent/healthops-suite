@@ -1,7 +1,7 @@
 # HealthOps Intelligence Suite
 **by Ryan Cox · coxcontent.com**
 
-A practitioner-built library of free diagnostic tools and calculators for specialty care operators. Each tool is a standalone HTML file — no dependencies, no build step, no backend. Drop them in a GitHub Pages repo and they're live.
+An operator-built library of free diagnostic tools and calculators for specialty care operators. Each tool is a standalone HTML file — no dependencies, no build step, no backend. Drop them in a GitHub Pages repo and they're live.
 
 ---
 
