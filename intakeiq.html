@@ -37,7 +37,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .logo-box svg{width:13px;height:13px;fill:white}
 .logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
 .logo-name span{color:var(--teal)}
-.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:1.25rem}
+.nav-link{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;letter-spacing:.04em;transition:color .15s}
+.nav-link:hover{color:var(--teal)}
+.nav-link-primary{color:var(--teal)}
+.nav-link-primary:hover{color:var(--text)}
 
 /* PROGRESS */
 .prog{height:2px;background:var(--border)}
@@ -188,7 +192,10 @@ h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color
     </div>
     <span class="logo-name">Intake<span>IQ</span></span>
   </div>
-  <span class="nav-tag">Ops Diagnostic</span>
+  <div class="nav-links">
+    <a class="nav-link" href="https://coxcontent.github.io/healthops-suite/">← All Tools</a>
+    <a class="nav-link nav-link-primary" href="https://coxcontent.com">coxcontent.com</a>
+  </div>
 </div>
 <div class="prog"><div class="prog-fill" id="prog"></div></div>
 

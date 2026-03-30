@@ -37,9 +37,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .logo-box svg{width:13px;height:13px;fill:white}
 .logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
 .logo-name span{color:var(--teal)}
-.nav-links{display:flex;align-items:center;gap:1.5rem}
-.nav-link{font-size:.82rem;color:var(--mid);text-decoration:none;font-family:'DM Mono',monospace;letter-spacing:.04em}
+.nav-links{display:flex;align-items:center;gap:1.25rem}
+.nav-link{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;letter-spacing:.04em;transition:color .15s}
 .nav-link:hover{color:var(--teal)}
+.nav-link-primary{color:var(--teal)}
+.nav-link-primary:hover{color:var(--text)}
 .nav-cta{padding:.45rem 1rem;background:var(--teal);color:white;border-radius:var(--r);font-size:.82rem;font-weight:500;text-decoration:none;white-space:nowrap}
 .nav-cta:hover{opacity:.9}
 
@@ -145,9 +147,8 @@ p:last-child{margin-bottom:0}
     <span class="logo-name">cox<span>content</span></span>
   </a>
   <div class="nav-links">
-    <a href="#tools" class="nav-link">Tools</a>
-    <a href="#methodology" class="nav-link">Method</a>
-    <a href="intakeiq.html" class="nav-cta">Try IntakeIQ →</a>
+    <a class="nav-link" href="https://coxcontent.github.io/healthops-suite/">← All Tools</a>
+    <a class="nav-link nav-link-primary" href="https://coxcontent.com">coxcontent.com</a>
   </div>
 </nav>
 
