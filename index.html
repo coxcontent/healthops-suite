@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HealthOps Intelligence Suite — Ryan Cox</title>
+<title>HealthOps Suite — Healthcare Admin Utilities</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -30,315 +30,289 @@
 html{color-scheme:light only;font-size:16px}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
 
-/* NAV */
 .nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo{display:flex;align-items:center;gap:.5rem}
 .logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
 .logo-box svg{width:13px;height:13px;fill:white}
 .logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
 .logo-name span{color:var(--teal)}
-.nav-link{font-size:.85rem;color:var(--mid);text-decoration:none;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.04em}
-.nav-link:hover{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 
-/* HERO */
-.hero{max-width:720px;margin:0 auto;padding:4rem 1.25rem 3rem}
-.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
-h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3rem);line-height:1.15;margin-bottom:1rem;color:var(--text)}
-h1 em{font-style:italic;color:var(--teal)}
-.lead{font-size:1rem;color:var(--mid);max-width:540px;line-height:1.7;margin-bottom:2rem}
-.stats{display:flex;gap:2.5rem;flex-wrap:wrap;padding:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:2.5rem}
-.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
-.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em}
+.hero{padding:3.5rem 1.25rem 2rem;max-width:860px;margin:0 auto}
+.hero-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.75rem}
+.hero-title{font-family:'DM Serif Display',serif;font-size:2.4rem;line-height:1.15;color:var(--text);margin-bottom:1rem}
+.hero-title em{font-style:italic;color:var(--teal)}
+.hero-desc{font-size:1rem;color:var(--mid);max-width:560px;line-height:1.65;margin-bottom:1.5rem}
+.hero-meta{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.hero-stat{display:flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted)}
+.hero-stat strong{color:var(--text);font-weight:500}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--border)}
 
-/* PHASE SECTIONS */
-.suite{max-width:720px;margin:0 auto;padding:0 1.25rem 5rem}
-.phase{margin-bottom:3rem}
-.phase-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
-.phase-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;padding:.2rem .6rem;border-radius:2px;white-space:nowrap}
-.phase-title{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text)}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem}
+.wrap{max-width:860px;margin:0 auto;padding:0 1.25rem 4rem}
 
-/* TOOL CARD */
-.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.25rem 1rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.5rem;transition:border-color .15s,box-shadow .15s;position:relative}
+.section-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.875rem;margin-bottom:2.5rem}
+
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.5rem;transition:border-color .15s,box-shadow .15s}
 .tool-card:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(13,112,112,.08)}
-.tool-card:hover .tool-arrow{opacity:1;transform:translate(2px,-2px)}
-.tool-name{font-size:.95rem;font-weight:500;color:var(--text);line-height:1.3;padding-right:1.25rem}
+.tool-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.tool-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);line-height:1.25}
+.tool-tag{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.tag-teal{color:var(--teal);background:var(--teal-bg)}
+.tag-purple{color:var(--purple);background:var(--purple-bg)}
+.tag-amber{color:var(--amber);background:var(--amber-bg)}
+.tag-green{color:var(--green);background:var(--green-bg)}
 .tool-desc{font-size:.82rem;color:var(--mid);line-height:1.5}
-.tool-tag{font-family:'DM Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem;display:inline-block;padding:.15rem .45rem;border-radius:2px}
-.tool-arrow{position:absolute;top:1.1rem;right:1.1rem;opacity:.3;transition:opacity .15s,transform .15s;color:var(--teal)}
+.tool-arrow{font-size:.8rem;color:var(--muted);margin-top:auto;padding-top:.25rem;display:flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.7rem}
 
-/* HUB CARD */
-.hub-card{background:var(--teal);border:none;color:white;border-radius:var(--r);padding:1.5rem;display:flex;align-items:center;justify-content:space-between;text-decoration:none;margin-bottom:2rem;transition:opacity .15s}
-.hub-card:hover{opacity:.93}
-.hub-left .hub-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-bottom:.35rem}
-.hub-left .hub-name{font-family:'DM Serif Display',serif;font-size:1.3rem;color:white;line-height:1.2}
-.hub-left .hub-desc{font-size:.85rem;opacity:.8;margin-top:.3rem}
-.hub-arrow{font-size:1.4rem;opacity:.7}
+.methodology-link{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:inherit;margin-top:.5rem;transition:border-color .15s}
+.methodology-link:hover{border-color:var(--teal)}
+.methodology-link-left{display:flex;flex-direction:column;gap:.2rem}
+.methodology-link-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.methodology-link-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--text)}
+.methodology-link-desc{font-size:.82rem;color:var(--mid)}
 
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:2rem 1.25rem;text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.04em}
-footer a{color:var(--teal);text-decoration:none}
-footer a:hover{text-decoration:underline}
-
-/* PHASE COLORS */
-.p1{background:var(--teal)}.p1t{color:var(--teal)}.p1bg{background:var(--teal-bg)}
-.p2{background:var(--amber)}.p2t{color:var(--amber)}.p2bg{background:var(--amber-bg)}
-.p3{background:var(--green)}.p3t{color:var(--green)}.p3bg{background:var(--green-bg)}
-.p4{background:var(--purple)}.p4t{color:var(--purple)}.p4bg{background:var(--purple-bg)}
-.p5{background:var(--red)}.p5t{color:var(--red)}.p5bg{background:var(--red-bg)}
-.p6{background:#2d6a9f}.p6t{color:#2d6a9f}.p6bg{background:#e8f0f8}
-
-@media(max-width:500px){.tools-grid{grid-template-columns:1fr}.stats{gap:1.5rem}}
+.foot{text-align:center;padding:2rem 1.25rem;border-top:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="logo" href="index.html">
+  <div class="logo">
     <div class="logo-box">
-      <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7l-8 4-8-4v-7l8-4.32z"/></svg>
+      <svg viewBox="0 0 16 16"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z"/></svg>
     </div>
     <span class="logo-name">HealthOps <span>Suite</span></span>
-  </a>
-  <a class="nav-link" href="https://coxcontent.com" target="_blank">coxcontent.com ↗</a>
+  </div>
+  <span class="nav-tag">Specialty Care Utilities</span>
 </nav>
 
-<section class="hero">
-  <p class="eyebrow">Free diagnostic tools for specialty care</p>
-  <h1>Run your practice like you <em>mean it.</em></h1>
-  <p class="lead">21 standalone calculators, scorers, and gap trackers built for specialty care operators. No logins, no subscriptions — each tool runs in your browser and gives you AI-powered recommendations based on your real numbers.</p>
-  <div class="stats">
-    <div>
-      <div class="stat-n">21</div>
-      <div class="stat-l">Free tools</div>
-    </div>
-    <div>
-      <div class="stat-n">6</div>
-      <div class="stat-l">Operational phases</div>
-    </div>
-    <div>
-      <div class="stat-n">AI</div>
-      <div class="stat-l">Powered recs</div>
-    </div>
-    <div>
-      <div class="stat-n">0</div>
-      <div class="stat-l">Dependencies</div>
-    </div>
+<div class="hero">
+  <div class="hero-label">Free Tools</div>
+  <h1 class="hero-title">Healthcare admin utilities<br>for <em>specialty care operators</em></h1>
+  <p class="hero-desc">Diagnostics, calculators, and scorers built for the operational realities of specialty care — each with AI-powered recommendations tailored to your results.</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><strong>21</strong> tools</div>
+    <div class="dot"></div>
+    <div class="hero-stat"><strong>Free</strong> to use</div>
+    <div class="dot"></div>
+    <div class="hero-stat">AI recs <strong>included</strong></div>
   </div>
-</section>
+</div>
 
-<main class="suite">
+<div class="wrap">
 
-  <!-- HUB -->
-  <a class="hub-card" href="methodology.html">
-    <div class="hub-left">
-      <div class="hub-label">Start here</div>
-      <div class="hub-name">Six-Phase Framework</div>
-      <div class="hub-desc">The methodology behind every tool — roadmap, tool index, and how to sequence your work.</div>
+  <div class="section-label">Diagnostics &amp; Scorers</div>
+  <div class="grid">
+
+    <a class="tool-card" href="intakeiq.html">
+      <div class="tool-card-top">
+        <div class="tool-name">IntakeIQ</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Full intake operations diagnostic — scores scheduling, authorization, front-desk, and follow-up performance across your practice.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="auth-denial-scorer.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Auth Denial Scorer</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Benchmark your prior authorization denial rate and surface the operational gaps driving unnecessary rejections.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="dar-benchmarker.html">
+      <div class="tool-card-top">
+        <div class="tool-name">DAR Benchmarker</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Assess your Days in AR against specialty-specific benchmarks and identify collection cycle bottlenecks.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="kpi-maturity-scorer.html">
+      <div class="tool-card-top">
+        <div class="tool-name">KPI Maturity Scorer</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Score the sophistication of your operational reporting and analytics stack across five maturity dimensions.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="care-coordination-gaps.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Care Coordination Gaps</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Identify breakdowns in referral handoffs, care transitions, and follow-up workflows that erode patient outcomes.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="interoperability-readiness.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Interoperability Readiness</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Evaluate your practice's readiness for data exchange, API compliance, and EHR interoperability requirements.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="hipaa-gap-tracker.html">
+      <div class="tool-card-top">
+        <div class="tool-name">HIPAA Gap Tracker</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Walk through a structured HIPAA compliance checklist and surface the gaps most likely to create audit exposure.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+    <a class="tool-card" href="implementation-complexity.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Implementation Complexity</div>
+        <span class="tool-tag tag-teal">Diagnostic</span>
+      </div>
+      <div class="tool-desc">Score the complexity of an upcoming system implementation before you start — so you can resource it correctly.</div>
+      <div class="tool-arrow">Run diagnostic →</div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Calculators</div>
+  <div class="grid">
+
+    <a class="tool-card" href="noshow-calculator.html">
+      <div class="tool-card-top">
+        <div class="tool-name">No-Show Calculator</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Quantify the true revenue impact of no-shows and cancellations, and model the ROI of reduction strategies.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="referral-leakage.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Referral Leakage</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Estimate how much revenue is walking out the door through referral leakage — and what closing the gap is worth.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="utilization-calculator.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Utilization Calculator</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Measure provider and room utilization rates against capacity benchmarks to find your scheduling headroom.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="patient-ltv-calculator.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Patient LTV Calculator</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Model the lifetime value of a patient relationship and understand the economics of retention vs. acquisition.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="appeal-roi-calculator.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Appeal ROI Calculator</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Calculate the return on investing in a formal denial appeals program based on your current denial volume and rates.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="turnover-calculator.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Turnover Cost Calculator</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Quantify the full cost of staff turnover — recruiting, training, and productivity loss — to make the retention case.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+    <a class="tool-card" href="automation-roi-builder.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Automation ROI Builder</div>
+        <span class="tool-tag tag-amber">Calculator</span>
+      </div>
+      <div class="tool-desc">Build the business case for automating a specific workflow — model time savings, error reduction, and payback period.</div>
+      <div class="tool-arrow">Calculate →</div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Analyzers &amp; Planners</div>
+  <div class="grid">
+
+    <a class="tool-card" href="payer-mix-analyzer.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Payer Mix Analyzer</div>
+        <span class="tool-tag tag-purple">Analyzer</span>
+      </div>
+      <div class="tool-desc">Analyze your payer mix composition and model how shifts in volume across payers affect your net revenue.</div>
+      <div class="tool-arrow">Analyze →</div>
+    </a>
+
+    <a class="tool-card" href="staffing-ratio-analyzer.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Staffing Ratio Analyzer</div>
+        <span class="tool-tag tag-purple">Analyzer</span>
+      </div>
+      <div class="tool-desc">Benchmark your staff-to-provider ratios against specialty norms and identify over- or under-staffed functions.</div>
+      <div class="tool-arrow">Analyze →</div>
+    </a>
+
+    <a class="tool-card" href="backfill-scorer.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Backfill Scorer</div>
+        <span class="tool-tag tag-purple">Analyzer</span>
+      </div>
+      <div class="tool-desc">Score how effectively your practice fills cancelled appointment slots and recaptures lost chair time.</div>
+      <div class="tool-arrow">Analyze →</div>
+    </a>
+
+    <a class="tool-card" href="build-vs-buy.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Build vs. Buy</div>
+        <span class="tool-tag tag-purple">Analyzer</span>
+      </div>
+      <div class="tool-desc">Structured framework for evaluating whether to build, buy, or outsource a specific operational capability.</div>
+      <div class="tool-arrow">Analyze →</div>
+    </a>
+
+    <a class="tool-card" href="golive-checklist.html">
+      <div class="tool-card-top">
+        <div class="tool-name">Go-Live Checklist</div>
+        <span class="tool-tag tag-green">Planner</span>
+      </div>
+      <div class="tool-desc">Step through a comprehensive system go-live readiness checklist to catch gaps before launch day.</div>
+      <div class="tool-arrow">Plan →</div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Reference</div>
+  <a class="methodology-link" href="methodology.html">
+    <div class="methodology-link-left">
+      <span class="methodology-link-label">Documentation</span>
+      <span class="methodology-link-title">Scoring Methodology</span>
+      <span class="methodology-link-desc">How benchmarks, weights, and scoring thresholds are calculated across the suite.</span>
     </div>
-    <div class="hub-arrow">→</div>
+    <span style="color:var(--muted);font-size:1.1rem">→</span>
   </a>
 
-  <!-- PHASE 1–2: LISTEN & DIAGNOSE -->
-  <div class="phase">
-    <div class="phase-header">
-      <span class="phase-badge p1">Phase 1–2</span>
-      <span class="phase-title">Listen &amp; Diagnose</span>
-    </div>
-    <div class="tools-grid">
+</div>
 
-      <a class="tool-card" href="intakeiq.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">IntakeIQ — Ops Diagnostic</div>
-        <div class="tool-desc">Full operations diagnostic across 6 questions and 5 domains. Scores 0–100 with a full breakdown.</div>
-        <span class="tool-tag p1t p1bg">Diagnostic</span>
-      </a>
-
-      <a class="tool-card" href="noshow-calculator.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">No-Show Cost Calculator</div>
-        <div class="tool-desc">True cost of patient no-shows including staff time, overhead, and opportunity cost.</div>
-        <span class="tool-tag p1t p1bg">Calculator</span>
-      </a>
-
-      <a class="tool-card" href="dar-benchmarker.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">DAR Benchmarker</div>
-        <div class="tool-desc">Days in A/R vs. specialty-specific benchmarks with revenue impact analysis.</div>
-        <span class="tool-tag p1t p1bg">Benchmarker</span>
-      </a>
-
-      <a class="tool-card" href="auth-denial-scorer.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Auth Denial Scorer</div>
-        <div class="tool-desc">Prior auth denial rate analysis with cost quantification and risk scoring.</div>
-        <span class="tool-tag p1t p1bg">Scorer</span>
-      </a>
-
-      <a class="tool-card" href="referral-leakage.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Referral Leakage Analyzer</div>
-        <div class="tool-desc">Visualize your referral funnel and quantify how much revenue is walking out the door.</div>
-        <span class="tool-tag p1t p1bg">Analyzer</span>
-      </a>
-
-      <a class="tool-card" href="utilization-calculator.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Utilization Calculator</div>
-        <div class="tool-desc">Billable vs. available hours and the revenue gap hiding in your schedule.</div>
-        <span class="tool-tag p1t p1bg">Calculator</span>
-      </a>
-
-      <a class="tool-card" href="turnover-calculator.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Turnover Cost Calculator</div>
-        <div class="tool-desc">Full cost breakdown per staff departure — recruiting, training, and lost productivity.</div>
-        <span class="tool-tag p1t p1bg">Calculator</span>
-      </a>
-
-      <a class="tool-card" href="patient-ltv-calculator.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Patient LTV Calculator</div>
-        <div class="tool-desc">Patient lifetime value with specialty-specific defaults and strategic use cases.</div>
-        <span class="tool-tag p1t p1bg">Calculator</span>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- PHASE 3: RECOMMEND -->
-  <div class="phase">
-    <div class="phase-header">
-      <span class="phase-badge p2">Phase 3</span>
-      <span class="phase-title">Recommend</span>
-    </div>
-    <div class="tools-grid">
-
-      <a class="tool-card" href="backfill-scorer.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Backfill Scorer</div>
-        <div class="tool-desc">How well does your practice recover cancelled slots? Score your backfill performance.</div>
-        <span class="tool-tag p2t p2bg">Scorer</span>
-      </a>
-
-      <a class="tool-card" href="payer-mix-analyzer.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Payer Mix Analyzer</div>
-        <div class="tool-desc">Payer concentration risk, revenue diversification gaps, and reimbursement exposure.</div>
-        <span class="tool-tag p2t p2bg">Analyzer</span>
-      </a>
-
-      <a class="tool-card" href="appeal-roi-calculator.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Appeal ROI Calculator</div>
-        <div class="tool-desc">Should you appeal this denial? Expected value vs. staff cost — the math, made easy.</div>
-        <span class="tool-tag p2t p2bg">Calculator</span>
-      </a>
-
-      <a class="tool-card" href="build-vs-buy.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Build vs. Buy Framework</div>
-        <div class="tool-desc">Structured decision framework for ops technology choices — custom build or vendor solution?</div>
-        <span class="tool-tag p2t p2bg">Framework</span>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- PHASE 4: DECIDE -->
-  <div class="phase">
-    <div class="phase-header">
-      <span class="phase-badge p3">Phase 4</span>
-      <span class="phase-title">Decide</span>
-    </div>
-    <div class="tools-grid">
-
-      <a class="tool-card" href="automation-roi-builder.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Automation ROI Builder</div>
-        <div class="tool-desc">Build a business case for workflow automation — time savings, cost avoidance, and payback period.</div>
-        <span class="tool-tag p3t p3bg">Builder</span>
-      </a>
-
-      <a class="tool-card" href="staffing-ratio-analyzer.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Staffing Ratio Analyzer</div>
-        <div class="tool-desc">Your staffing ratios vs. specialty benchmarks — where are you over or under resourced?</div>
-        <span class="tool-tag p3t p3bg">Analyzer</span>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- PHASE 5: EXECUTE -->
-  <div class="phase">
-    <div class="phase-header">
-      <span class="phase-badge p4">Phase 5</span>
-      <span class="phase-title">Execute</span>
-    </div>
-    <div class="tools-grid">
-
-      <a class="tool-card" href="golive-checklist.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Go-Live Readiness Checklist</div>
-        <div class="tool-desc">Pre-launch readiness checklist for new system deployments. Know before you go live.</div>
-        <span class="tool-tag p4t p4bg">Checklist</span>
-      </a>
-
-      <a class="tool-card" href="hipaa-gap-tracker.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">HIPAA Gap Tracker</div>
-        <div class="tool-desc">Administrative safeguard self-assessment across 20 items. Find your compliance gaps.</div>
-        <span class="tool-tag p4t p4bg">Tracker</span>
-      </a>
-
-      <a class="tool-card" href="implementation-complexity.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Implementation Complexity Scorer</div>
-        <div class="tool-desc">How hard will this implementation actually be? Score complexity before you commit.</div>
-        <span class="tool-tag p4t p4bg">Scorer</span>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- PHASE 6: OPERATIONALIZE -->
-  <div class="phase">
-    <div class="phase-header">
-      <span class="phase-badge p5">Phase 6</span>
-      <span class="phase-title">Operationalize</span>
-    </div>
-    <div class="tools-grid">
-
-      <a class="tool-card" href="kpi-maturity-scorer.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">KPI Maturity Scorer</div>
-        <div class="tool-desc">How sophisticated is your operational reporting? Score your measurement maturity.</div>
-        <span class="tool-tag p5t p5bg">Scorer</span>
-      </a>
-
-      <a class="tool-card" href="care-coordination-gaps.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Care Coordination Gap Finder</div>
-        <div class="tool-desc">Cross-specialty handoff breakdown — where are patients falling through the cracks?</div>
-        <span class="tool-tag p5t p5bg">Analyzer</span>
-      </a>
-
-      <a class="tool-card" href="interoperability-readiness.html">
-        <span class="tool-arrow">↗</span>
-        <div class="tool-name">Interoperability Readiness</div>
-        <div class="tool-desc">Data and integration maturity vs. the 2028 CMS interoperability mandate. Are you ready?</div>
-        <span class="tool-tag p5t p5bg">Readiness</span>
-      </a>
-
-    </div>
-  </div>
-
-</main>
-
-<footer>
-  Built by <a href="https://coxcontent.com" target="_blank">Ryan Cox</a> · Free to use and share · <a href="methodology.html">Methodology</a> · <a href="https://github.com/coxcontent/healthops-suite" target="_blank">GitHub ↗</a>
-</footer>
+<div class="foot">
+  HealthOps Suite &nbsp;·&nbsp; Free for specialty care operators
+</div>
 
 </body>
 </html>
