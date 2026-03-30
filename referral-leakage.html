@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Leakage Estimator · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--teal)}
+.has-prefix input{padding-left:2rem}.has-suffix input{padding-right:2.5rem}
+.slider-wrap{margin-top:.5rem}
+input[type=range]{width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid white}
+.slider-labels{display:flex;justify-content:space-between;margin-top:.375rem;font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace}
+.slider-val{text-align:center;font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--teal);margin-top:.375rem}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.impact-hero{border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.impact-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.impact-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.impact-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.funnel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.funnel-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.25rem}
+.funnel-step{display:flex;align-items:center;gap:1rem;margin-bottom:.875rem}
+.funnel-bar-wrap{flex:1;height:28px;background:var(--bg);border-radius:3px;overflow:hidden;position:relative}
+.funnel-bar{height:100%;border-radius:3px;transition:width 1s ease;display:flex;align-items:center;padding-left:.625rem}
+.funnel-bar-label{font-size:.75rem;color:white;font-weight:500;white-space:nowrap}
+.funnel-step-label{font-size:.82rem;color:var(--mid);width:90px;min-width:90px}
+.funnel-step-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:50px;text-align:right}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--teal);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid,.preview-grid{grid-template-columns:1fr}.funnel-step-label{width:70px;min-width:70px}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Intake · Referral Leakage</span>
+</div>
+
+<!-- LANDING -->
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>How many referrals are <em>slipping through the cracks?</em></h1>
+    <p class="lead">Most practices track appointments. Few track the referrals that never became appointments. Referral leakage — the gap between referrals received and patients who start care — is one of the most underestimated sources of revenue loss in specialty care.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Estimate My Leakage <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">4 inputs · 60 seconds · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">30%</div><div class="stat-l">Avg referral leakage rate</div></div>
+      <div><div class="stat-n">80%</div><div class="stat-l">Best-in-class conversion rate</div></div>
+      <div><div class="stat-n">$200K+</div><div class="stat-l">Typical annual leakage cost</div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- CALCULATOR -->
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Your Referral Pipeline</div>
+      <div class="field">
+        <label class="field-label" for="monthly-refs">Monthly referrals received</label>
+        <span class="field-hint">All inbound referrals, regardless of source</span>
+        <input type="number" id="monthly-refs" value="80" min="1" oninput="liveCalc()">
+      </div>
+      <div class="field">
+        <label class="field-label">Referral-to-appointment conversion rate</label>
+        <span class="field-hint">% of referrals that result in a scheduled first appointment</span>
+        <div class="slider-wrap">
+          <input type="range" id="conversion" min="20" max="100" value="60" oninput="updateSlider('conversion','conv-val','%');liveCalc()">
+          <div class="slider-val" id="conv-val">60%</div>
+          <div class="slider-labels"><span>20%</span><span>Avg ~65%</span><span>100%</span></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="ltv">Average patient lifetime value</label>
+        <span class="field-hint">Total revenue per patient over their care episode</span>
+        <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="ltv" value="8000" min="1" oninput="liveCalc()"></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="intake-time">Days from referral to first contact (avg)</label>
+        <span class="field-hint">How quickly do you follow up on new referrals?</span>
+        <input type="number" id="intake-time" value="5" min="1" max="60" oninput="liveCalc()">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Live Estimate</div>
+      <div class="preview-grid">
+        <div class="b-card" id="prev-card1"><div class="b-val" id="prev-lost">—</div><div class="b-label">Referrals lost per month</div></div>
+        <div class="b-card" id="prev-card2"><div class="b-val" id="prev-annual">—</div><div class="b-label">Annual revenue lost to leakage</div></div>
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results');buildResults()">See Full Report <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<!-- RESULTS -->
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Referral Leakage Analysis</h2>
+
+    <div class="impact-hero" id="hero-card">
+      <div class="impact-label">Annual Revenue Lost to Referral Leakage</div>
+      <div class="impact-num" id="r-total">—</div>
+      <div class="impact-sub" id="r-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card" id="r-conv-card"><div class="b-val" id="r-conv">—</div><div class="b-label">Your conversion rate</div></div>
+      <div class="b-card"><div class="b-val" id="r-lost-monthly">—</div><div class="b-label">Referrals lost per month</div></div>
+      <div class="b-card good"><div class="b-val" id="r-recoverable">—</div><div class="b-label">Recoverable at 80% conversion</div></div>
+      <div class="b-card" id="r-time-card"><div class="b-val" id="r-time-rating">—</div><div class="b-label">First-contact speed rating</div></div>
+    </div>
+
+    <div class="funnel">
+      <div class="funnel-title">Your Referral Funnel</div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">Received</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-received" style="background:var(--teal);width:0%"><span class="funnel-bar-label" id="f-received-n">—</span></div></div>
+        <div class="funnel-step-val">100%</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">Contacted</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-contacted" style="background:var(--teal);opacity:.8;width:0%"><span class="funnel-bar-label" id="f-contacted-n">—</span></div></div>
+        <div class="funnel-step-val" id="f-contacted-pct">—</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">Scheduled</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-scheduled" style="background:var(--teal);opacity:.6;width:0%"><span class="funnel-bar-label" id="f-scheduled-n">—</span></div></div>
+        <div class="funnel-step-val" id="f-scheduled-pct">—</div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">Leaked</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" id="f-leaked" style="background:var(--red);width:0%"><span class="funnel-bar-label" id="f-leaked-n">—</span></div></div>
+        <div class="funnel-step-val" id="f-leaked-pct">—</div>
+      </div>
+    </div>
+
+    <div class="recs">
+      <div class="card-title" style="margin-bottom:1rem">Priority Actions</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">See your full operations score</div>
+      <p class="cta-body">Referral conversion is part of your intake score. IntakeIQ benchmarks all five operational domains in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-primary">Try IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function updateSlider(id,valId,suffix){document.getElementById(valId).textContent=document.getElementById(id).value+suffix}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+n}
+
+function getInputs(){return{monthlyRefs:parseInt(document.getElementById('monthly-refs').value)||80,conversion:parseInt(document.getElementById('conversion').value)||60,ltv:parseInt(document.getElementById('ltv').value)||8000,intakeTime:parseInt(document.getElementById('intake-time').value)||5}}
+
+function liveCalc(){
+  const i=getInputs();
+  const lostPct=(100-i.conversion)/100;
+  const lostMonthly=Math.round(i.monthlyRefs*lostPct);
+  const annualLost=lostMonthly*i.ltv*12;
+  document.getElementById('prev-lost').textContent=lostMonthly+'/mo';
+  document.getElementById('prev-annual').textContent=fmt(annualLost);
+  document.getElementById('prev-card1').className='b-card '+(i.conversion<60?'bad':i.conversion<75?'warn':'good');
+  document.getElementById('prev-card2').className='b-card '+(annualLost>200000?'bad':annualLost>100000?'warn':'good');
+}
+
+function buildResults(){
+  const i=getInputs();
+  const lostPct=(100-i.conversion)/100;
+  const lostMonthly=Math.round(i.monthlyRefs*lostPct);
+  const annualLost=lostMonthly*i.ltv*12;
+  const recoverablePct=Math.max(0,(80-i.conversion));
+  const recoverable=Math.round(i.monthlyRefs*(recoverablePct/100)*i.ltv*12);
+  const contactedPct=Math.min(100,i.conversion+15);
+
+  document.getElementById('r-total').textContent=fmt(annualLost);
+  const hero=document.getElementById('hero-card');
+  hero.style.background=i.conversion>=80?'var(--green)':i.conversion>=65?'var(--teal)':i.conversion>=50?'var(--amber)':'var(--red)';
+  document.getElementById('r-sub').textContent=i.conversion+'% conversion · '+lostMonthly+' referrals lost/month · '+fmt(i.ltv)+' avg patient value';
+
+  document.getElementById('r-conv').textContent=i.conversion+'%';
+  document.getElementById('r-conv-card').className='b-card '+(i.conversion>=80?'good':i.conversion>=65?'':'warn');
+  document.getElementById('r-lost-monthly').textContent=lostMonthly+' refs';
+  document.getElementById('r-recoverable').textContent=recoverable>0?fmt(recoverable):'At target';
+  const timeRating=i.intakeTime<=2?'✓ Excellent':i.intakeTime<=5?'↑ Good':i.intakeTime<=10?'⚠ Slow':'✗ Critical';
+  document.getElementById('r-time-rating').textContent=timeRating;
+  document.getElementById('r-time-card').className='b-card '+(i.intakeTime<=2?'good':i.intakeTime<=5?'':i.intakeTime<=10?'warn':'bad');
+
+  setTimeout(()=>{
+    document.getElementById('f-received').style.width='100%';
+    document.getElementById('f-received-n').textContent=i.monthlyRefs+'/mo';
+    document.getElementById('f-contacted').style.width=contactedPct+'%';
+    document.getElementById('f-contacted-n').textContent=Math.round(i.monthlyRefs*contactedPct/100)+'/mo';
+    document.getElementById('f-contacted-pct').textContent=contactedPct+'%';
+    document.getElementById('f-scheduled').style.width=i.conversion+'%';
+    document.getElementById('f-scheduled-n').textContent=Math.round(i.monthlyRefs*i.conversion/100)+'/mo';
+    document.getElementById('f-scheduled-pct').textContent=i.conversion+'%';
+    document.getElementById('f-leaked').style.width=Math.round(lostPct*100)+'%';
+    document.getElementById('f-leaked-n').textContent=lostMonthly+'/mo';
+    document.getElementById('f-leaked-pct').textContent=Math.round(lostPct*100)+'%';
+  },150);
+
+  const recs=[];
+  if(i.intakeTime>3)recs.push({icon:'⚡',title:'Respond to referrals within 24 hours',desc:'Practices that contact referred patients within 24 hours convert at 80%+. Response time beyond 5 days drops conversion below 50%.',impact:'Speed alone could recover '+fmt(Math.round(recoverable*0.4)),bg:'var(--teal-bg)'});
+  recs.push({icon:'📋',title:'Track referrals in a dedicated system',desc:'Most leakage is invisible because referrals aren\'t tracked systematically. A simple referral log — even a spreadsheet — surfaces where in the funnel patients are dropping off.',impact:'Visibility is the prerequisite for every other fix',bg:'var(--amber-bg)'});
+  if(i.conversion<75)recs.push({icon:'🔄',title:'Implement a 3-touch follow-up sequence',desc:'Phone, then text, then mail. Practices with a structured multi-touch outreach sequence convert 25–35% more referrals than single-contact attempts.',impact:'25–35% improvement in conversion rate on average',bg:'var(--green-bg)'});
+  recs.push({icon:'📊',title:'Identify your highest-leakage referral sources',desc:'Some referral sources convert at 90%+, others below 40%. Knowing which sources leak most tells you where to focus relationship-building with referring providers.',impact:'Source-specific targeting improves overall conversion by 15–20%',bg:'var(--red-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'ReferralLeakage',monthlyReferrals:i.monthlyRefs,conversionRate:i.conversion,patientLTV:i.ltv,daysToContact:i.intakeTime,lostMonthly:lostMonthly,annualRevenueLost:annualLost,recoverable:recoverable};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+liveCalc();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

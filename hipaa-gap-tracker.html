@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIPAA Compliance Gap Tracker · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--red);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--red)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.prog{height:2px;background:var(--border);position:sticky;top:57px;z-index:99}
+.prog-fill{height:100%;background:var(--red);transition:width .3s ease;width:0%}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--red)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.disclaimer{background:var(--amber-bg);border:1px solid #e8c080;border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:2rem;font-size:.82rem;color:var(--amber);line-height:1.5}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--red);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--red)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.assess{padding:2rem 0 4rem}
+.sec-group{margin-bottom:2rem}
+.sec-head{display:flex;align-items:center;gap:.625rem;margin-bottom:1rem}
+.badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;padding:.2rem .55rem;border-radius:2px}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.check-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.625rem;display:flex;align-items:flex-start;gap:.875rem;cursor:pointer;transition:border-color .12s,background .12s}
+.check-item:hover{border-color:#a8c8c8}
+.check-item.yes{border-color:var(--green);background:var(--green-bg)}
+.check-item.no{border-color:var(--red);background:var(--red-bg)}
+.check-item.partial{border-color:var(--amber);background:var(--amber-bg)}
+.check-box{width:20px;height:20px;min-width:20px;border:1.5px solid var(--border);border-radius:3px;display:grid;place-items:center;margin-top:1px;transition:all .12s;flex-shrink:0;font-size:.75rem}
+.check-item.yes .check-box{background:var(--green);border-color:var(--green);color:white}
+.check-item.no .check-box{background:var(--red);border-color:var(--red);color:white}
+.check-item.partial .check-box{background:var(--amber);border-color:var(--amber);color:white}
+.check-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.check-desc{font-size:.78rem;color:var(--mid);line-height:1.4}
+.check-controls{display:flex;gap:.375rem;margin-top:.5rem}
+.ctrl-btn{font-family:'DM Mono',monospace;font-size:.65rem;padding:.2rem .5rem;border-radius:2px;border:1px solid var(--border);cursor:pointer;background:var(--bg);color:var(--mid);letter-spacing:.04em;transition:all .1s}
+.ctrl-btn:hover{border-color:var(--text);color:var(--text)}
+.ctrl-btn.active-yes{background:var(--green);border-color:var(--green);color:white}
+.ctrl-btn.active-no{background:var(--red);border-color:var(--red);color:white}
+.ctrl-btn.active-partial{background:var(--amber);border-color:var(--amber);color:white}
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding-top:1.25rem;border-top:1px solid var(--border);gap:.75rem;flex-wrap:wrap}
+.nav-status{font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.score-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.5rem}
+.ring{width:88px;height:88px;position:relative;flex-shrink:0}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7}
+.ring-bg{stroke:var(--border)}
+.ring-fg{stroke:var(--red);stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transition:stroke-dashoffset 1.1s ease}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1;color:var(--text)}
+.ring-sub{font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.score-info{flex:1}
+.score-grade{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.25rem}
+.score-desc{font-size:.88rem;color:var(--mid);line-height:1.5;margin-bottom:.75rem}
+.tag{display:inline-block;padding:.2rem .55rem;border-radius:2px;font-size:.7rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.tag-crit{background:var(--red-bg);color:var(--red)}
+.tag-risk{background:var(--amber-bg);color:var(--amber)}
+.tag-dev{background:var(--teal-bg);color:var(--teal)}
+.tag-opt{background:var(--green-bg);color:var(--green)}
+.gap-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.gap-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.gap-item{display:flex;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.gap-item:last-child{border-bottom:none;padding-bottom:0}.gap-item:first-child{padding-top:0}
+.gap-sev{font-family:'DM Mono',monospace;font-size:.65rem;padding:.18rem .45rem;border-radius:2px;text-transform:uppercase;height:fit-content;margin-top:2px;white-space:nowrap}
+.sev-high{background:var(--red-bg);color:var(--red)}
+.sev-med{background:var(--amber-bg);color:var(--amber)}
+.gap-name{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.gap-desc{font-size:.8rem;color:var(--mid);line-height:1.4}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--red)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.score-card{flex-direction:column;align-items:flex-start}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Execute · HIPAA Compliance</span>
+</div>
+<div class="prog"><div class="prog-fill" id="prog"></div></div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Where are your <em>HIPAA administrative gaps?</em></h1>
+    <p class="lead">Most HIPAA violations aren't technical — they're administrative. This checklist covers the 20 most common administrative safeguard gaps in specialty care practices, scored by risk severity.</p>
+    <div class="disclaimer">⚠️ This tool is for operational self-assessment only and does not constitute legal or compliance advice. Consult a qualified HIPAA compliance officer or attorney for formal assessments.</div>
+    <button class="btn btn-primary" onclick="go('s-assess')">Run Gap Assessment <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">20 items · ~5 minutes · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">$50K</div><div class="stat-l">Avg HIPAA fine, small practice</div></div>
+      <div><div class="stat-n">60%</div><div class="stat-l">Violations are administrative, not technical</div></div>
+      <div><div class="stat-n">90%</div><div class="stat-l">Preventable with documented policies</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-assess" class="screen">
+  <div class="wrap"><div class="assess">
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--red)">Policies</span><span class="sec-title">Policies & Procedures</span></div>
+      <div id="grp-policies"></div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--amber)">Training</span><span class="sec-title">Workforce Training</span></div>
+      <div id="grp-training"></div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--teal)">Access</span><span class="sec-title">Access Controls</span></div>
+      <div id="grp-access"></div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--purple)" style="--purple:#6655aa">Vendors</span><span class="sec-title">Business Associates</span></div>
+      <div id="grp-vendors"></div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--green)">Incidents</span><span class="sec-title">Incident Response</span></div>
+      <div id="grp-incidents"></div>
+    </div>
+
+    <div class="nav-row">
+      <span class="nav-status" id="nav-status">0 of 20 assessed</span>
+      <div style="display:flex;gap:.625rem">
+        <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+        <button class="btn btn-primary" onclick="submit()">View Gap Report <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>HIPAA Gap Report</h2>
+    <div class="score-card">
+      <div class="ring"><svg viewBox="0 0 88 88"><circle class="ring-bg" cx="44" cy="44" r="36"/><circle class="ring-fg" id="ring-fg" cx="44" cy="44" r="36"/></svg>
+        <div class="ring-center"><span class="ring-num" id="r-score">—</span><span class="ring-sub">/ 100</span></div>
+      </div>
+      <div class="score-info">
+        <div class="score-grade" id="r-grade">—</div>
+        <p class="score-desc" id="r-desc">—</p>
+        <span class="tag" id="r-tag">—</span>
+      </div>
+    </div>
+    <div class="gap-list">
+      <div class="gap-title">Gaps Identified</div>
+      <div id="r-gaps"></div>
+    </div>
+    <div class="cta-card">
+      <div class="cta-title">HIPAA gaps often surface during implementation</div>
+      <p class="cta-body">The Go-Live Readiness Checklist covers HIPAA requirements alongside operational readiness for new system deployments.</p>
+      <div class="cta-btns">
+        <a href="golive-checklist.html" class="btn btn-primary">Go-Live Checklist →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators · Not legal advice</div></div>
+  </div></div>
+</div>
+
+<script>
+const ITEMS={
+  'grp-policies':[
+    {id:'p1',sev:'high',label:'Written HIPAA Privacy Policy',desc:'A documented privacy policy covering PHI use and disclosure is required for all covered entities.'},
+    {id:'p2',sev:'high',label:'Written HIPAA Security Policy',desc:'Administrative, physical, and technical safeguards must be documented in writing.'},
+    {id:'p3',sev:'high',label:'Notice of Privacy Practices (NPP)',desc:'Patients must receive an NPP at first service. It must be posted and available on request.'},
+    {id:'p4',sev:'med',label:'Annual policy review and update',desc:'Policies must be reviewed periodically. Most practices review annually or when workflows change.'}
+  ],
+  'grp-training':[
+    {id:'t1',sev:'high',label:'HIPAA training for all new workforce members',desc:'Every employee, contractor, and volunteer with PHI access must receive HIPAA training at hire.'},
+    {id:'t2',sev:'high',label:'Annual HIPAA refresher training',desc:'Ongoing training is required when policies change and recommended annually.'},
+    {id:'t3',sev:'med',label:'Training documentation and records',desc:'Training completion must be documented and retained for 6 years.'},
+    {id:'t4',sev:'med',label:'Role-specific training for high-risk roles',desc:'Billing, scheduling, and clinical staff handling PHI daily benefit from role-specific training.'}
+  ],
+  'grp-access':[
+    {id:'a1',sev:'high',label:'Unique user IDs for all system access',desc:'Each workforce member must have a unique login. Shared credentials are a significant violation risk.'},
+    {id:'a2',sev:'high',label:'Automatic session timeout on workstations',desc:'Unattended workstations must lock automatically. 15-minute timeout is standard.'},
+    {id:'a3',sev:'high',label:'Access termination process for departing employees',desc:'PHI system access must be revoked immediately upon termination. Many practices have gaps here.'},
+    {id:'a4',sev:'med',label:'Minimum necessary access controls',desc:'Staff should only have access to PHI necessary for their role. Role-based access control is the standard.'},
+    {id:'a5',sev:'med',label:'Audit logs reviewed periodically',desc:'System access logs should be reviewed regularly to detect unauthorized PHI access.'}
+  ],
+  'grp-vendors':[
+    {id:'v1',sev:'high',label:'BAAs signed with all PHI-handling vendors',desc:'Every vendor touching PHI — EHR, billing, scheduling, cloud storage — requires a signed Business Associate Agreement.'},
+    {id:'v2',sev:'high',label:'BAA inventory maintained and current',desc:'A list of all active BAAs with renewal dates prevents gaps when vendors are added or contracts expire.'},
+    {id:'v3',sev:'med',label:'Vendor security practices reviewed before contracting',desc:'Before signing a BAA, you should review the vendor\'s security posture — SOC 2, HITRUST, or equivalent.'},
+    {id:'v4',sev:'med',label:'BAA includes breach notification requirements',desc:'BAAs must specify notification timelines (60 days) and procedures in the event of a breach.'}
+  ],
+  'grp-incidents':[
+    {id:'i1',sev:'high',label:'Documented breach notification procedure',desc:'A written procedure for identifying, reporting, and responding to breaches is required.'},
+    {id:'i2',sev:'high',label:'Breach log maintained',desc:'All suspected breaches must be logged, even if risk assessment concludes no notification is required.'},
+    {id:'i3',sev:'med',label:'Risk assessment completed within last 2 years',desc:'A formal HIPAA risk assessment is required. It must be updated when material changes occur.'},
+    {id:'i4',sev:'med',label:'Designated Privacy Officer',desc:'Every covered entity must designate a Privacy Officer responsible for HIPAA compliance.'}
+  ]
+};
+
+const state={};
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);updateProg()}
+function updateProg(){const total=20;const done=Object.keys(state).length;document.getElementById('prog').style.width=(done/total*100)+'%';const el=document.getElementById('nav-status');if(el)el.textContent=done+' of '+total+' assessed'}
+
+function buildChecklist(){
+  Object.keys(ITEMS).forEach(grp=>{
+    const el=document.getElementById(grp);
+    el.innerHTML=ITEMS[grp].map(item=>`
+      <div class="check-item" id="ci-${item.id}">
+        <div class="check-box" id="cb-${item.id}"></div>
+        <div style="flex:1">
+          <div class="check-label">${item.label}</div>
+          <div class="check-desc">${item.desc}</div>
+          <div class="check-controls">
+            <button class="ctrl-btn" id="btn-yes-${item.id}" onclick="setItem('${item.id}','yes')">✓ Yes</button>
+            <button class="ctrl-btn" id="btn-partial-${item.id}" onclick="setItem('${item.id}','partial')">~ Partial</button>
+            <button class="ctrl-btn" id="btn-no-${item.id}" onclick="setItem('${item.id}','no')">✗ No</button>
+          </div>
+        </div>
+      </div>`).join('');
+  });
+}
+
+function setItem(id,val){
+  state[id]=val;
+  const ci=document.getElementById('ci-'+id);
+  ci.className='check-item '+val;
+  const cb=document.getElementById('cb-'+id);
+  cb.textContent=val==='yes'?'✓':val==='partial'?'~':'✗';
+  ['yes','partial','no'].forEach(v=>{
+    const btn=document.getElementById('btn-'+v+'-'+id);
+    btn.className='ctrl-btn'+(val===v?' active-'+v:'');
+  });
+  updateProg();
+}
+
+function submit(){
+  const allItems=Object.values(ITEMS).flat();
+  let score=0;
+  const gaps=[];
+  allItems.forEach(item=>{
+    const v=state[item.id];
+    if(v==='yes')score+=5;
+    else if(v==='partial')score+=2.5;
+    else if(v==='no')gaps.push(item);
+    else gaps.push({...item,unanswered:true});
+  });
+  const pct=Math.round((score/100)*100);
+
+  go('s-results');
+  setTimeout(()=>{
+    const circ=226;
+    document.getElementById('ring-fg').style.strokeDashoffset=circ-(pct/100*circ);
+    document.getElementById('ring-fg').style.stroke=pct>=80?'var(--green)':pct>=60?'var(--teal)':pct>=40?'var(--amber)':'var(--red)';
+    document.getElementById('r-score').textContent=pct;
+  },80);
+
+  const grades=[[80,'Strong Compliance Posture','tag-opt','Your administrative safeguards appear largely in place. Focus on documentation completeness and annual review cycles.'],[60,'Moderate Gaps Present','tag-dev','Several gaps exist that should be addressed within 90 days. Prioritize high-severity items first.'],[40,'Significant Compliance Risk','tag-risk','Multiple high-severity gaps create material breach risk. An immediate remediation plan is warranted.'],[0,'Critical Compliance Exposure','tag-crit','Severe gaps across multiple categories create high likelihood of enforcement risk. Engage a compliance professional promptly.']];
+  const g=grades.find(([t])=>pct>=t);
+  document.getElementById('r-grade').textContent=g[1];
+  document.getElementById('r-desc').textContent=g[2];
+  document.getElementById('r-tag').textContent=g[1];
+  document.getElementById('r-tag').className='tag '+g[3];
+
+  const highGaps=gaps.filter(g=>g.sev==='high'&&!g.unanswered);
+  const medGaps=gaps.filter(g=>g.sev==='med'&&!g.unanswered);
+  const allGaps=[...highGaps,...medGaps];
+
+  if(allGaps.length===0){
+    document.getElementById('r-gaps').innerHTML='<div style="padding:1rem;font-size:.9rem;color:var(--green)">✓ No gaps identified from answered items. Review unanswered items to complete your assessment.</div>';
+  } else {
+    document.getElementById('r-gaps').innerHTML=allGaps.map(g=>`
+      <div class="gap-item">
+        <div class="gap-sev ${g.sev==='high'?'sev-high':'sev-med'}">${g.sev}</div>
+        <div><div class="gap-name">${g.label}</div><div class="gap-desc">${g.desc}</div></div>
+      </div>`).join('');
+  }
+
+  window._aiContext = {tool:'HIPAAGapTracker',complianceScore:pct,totalGapsIdentified:allGaps.length,highSeverityGaps:highGaps.length,mediumSeverityGaps:medGaps.length};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+buildChecklist();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

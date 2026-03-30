@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAR Benchmarker · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--purple);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--purple)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--purple)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--purple);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--purple)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--purple)}
+.has-prefix input{padding-left:2rem}.has-suffix input{padding-right:2.5rem}
+select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;cursor:pointer}
+select:focus{border-color:var(--purple)}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.impact-hero{border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.impact-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.impact-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.impact-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.bench{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.bench-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.1rem}
+.bench-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.75rem}
+.bench-label{font-size:.82rem;color:var(--mid);width:160px;min-width:160px}
+.bench-track{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bench-bar{height:100%;border-radius:4px;transition:width .9s ease}
+.bench-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:40px;text-align:right}
+.verdict{font-size:.78rem;font-family:'DM Mono',monospace;margin-top:.5rem}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--purple);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--purple)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid,.preview-grid{grid-template-columns:1fr}.bench-label{width:110px;min-width:110px}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">RCM · DAR Benchmarker</span>
+</div>
+
+<!-- LANDING -->
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>How does your A/R compare to <em>specialty benchmarks?</em></h1>
+    <p class="lead">Days in Accounts Receivable is one of the most important indicators of revenue cycle health — and one of the most benchmarked differently across specialties. This tool scores your DAR against peers and quantifies how much cash is tied up unnecessarily.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Calculate My DAR <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">4 inputs · 60 seconds · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">30</div><div class="stat-l">Days — best in class DAR</div></div>
+      <div><div class="stat-n">45</div><div class="stat-l">Days — industry average</div></div>
+      <div><div class="stat-n">$50K</div><div class="stat-l">Avg cash freed per 10-day improvement</div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- CALCULATOR -->
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Your Revenue Cycle</div>
+      <div class="field">
+        <label class="field-label" for="specialty">Primary specialty</label>
+        <select id="specialty" onchange="liveCalc()">
+          <option value="behavioral">Behavioral Health / ABA</option>
+          <option value="neurology">Neurology</option>
+          <option value="pcp">Primary Care / Family Medicine</option>
+          <option value="rehab">Rehab (PT, OT, Speech)</option>
+          <option value="oncology">Oncology</option>
+          <option value="other">Other specialty</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="ar-balance">Current total A/R balance</label>
+        <span class="field-hint">All outstanding claims, all payers</span>
+        <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="ar-balance" value="500000" min="0" oninput="liveCalc()"></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="monthly-rev">Average monthly gross charges</label>
+        <span class="field-hint">What you bill before adjustments</span>
+        <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="monthly-rev" value="300000" min="1" oninput="liveCalc()"></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="over90">Percentage of A/R over 90 days</label>
+        <span class="field-hint">Industry benchmark: under 15%</span>
+        <div class="input-wrap has-suffix"><input type="number" id="over90" value="20" min="0" max="100" oninput="liveCalc()"><span class="suffix">%</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Live Estimate</div>
+      <div class="preview-grid">
+        <div class="b-card"><div class="b-val" id="prev-dar">—</div><div class="b-label">Your DAR (days)</div></div>
+        <div class="b-card" id="prev-excess-card"><div class="b-val" id="prev-excess">—</div><div class="b-label">Cash tied up vs. benchmark</div></div>
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results'); buildResults()">See Full Report <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<!-- RESULTS -->
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>DAR Analysis</h2>
+
+    <div class="impact-hero" id="hero-card">
+      <div class="impact-label">Your Days in A/R</div>
+      <div class="impact-num" id="r-dar">—</div>
+      <div class="impact-sub" id="r-hero-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card"><div class="b-val" id="r-benchmark">—</div><div class="b-label">Specialty benchmark (days)</div></div>
+      <div class="b-card" id="r-gap-card"><div class="b-val" id="r-gap">—</div><div class="b-label">Days above/below benchmark</div></div>
+      <div class="b-card" id="r-cash-card"><div class="b-val" id="r-cash">—</div><div class="b-label">Cash tied up in excess A/R</div></div>
+      <div class="b-card"><div class="b-val" id="r-over90-rating">—</div><div class="b-label">A/R over 90 days rating</div></div>
+    </div>
+
+    <div class="bench">
+      <div class="bench-title">DAR Benchmark Comparison</div>
+      <div class="bench-row"><div class="bench-label">Best in class</div><div class="bench-track"><div class="bench-bar" id="bar-best" style="background:var(--green)"></div></div><div class="bench-val">25d</div></div>
+      <div class="bench-row"><div class="bench-label">Specialty avg</div><div class="bench-track"><div class="bench-bar" id="bar-spec" style="background:var(--amber)"></div></div><div class="bench-val" id="bar-spec-val">—</div></div>
+      <div class="bench-row"><div class="bench-label">Your DAR</div><div class="bench-track"><div class="bench-bar" id="bar-you" style="background:var(--purple)"></div></div><div class="bench-val" id="bar-you-val">—</div></div>
+      <div class="verdict" id="r-verdict">—</div>
+    </div>
+
+    <div class="recs">
+      <div class="card-title" style="margin-bottom:1rem">Priority Actions</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">See your full operations score</div>
+      <p class="cta-body">DAR is one of five domains in your operations readiness score. IntakeIQ benchmarks intake, prior auth, scheduling, and workforce alongside revenue cycle in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-teal">Try IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const BENCHMARKS = {
+  behavioral:{avg:45,best:28,name:'Behavioral Health'},
+  neurology:{avg:42,best:26,name:'Neurology'},
+  pcp:{avg:35,best:22,name:'Primary Care'},
+  rehab:{avg:40,best:25,name:'Rehab'},
+  oncology:{avg:38,best:24,name:'Oncology'},
+  other:{avg:42,best:27,name:'Specialty Care'}
+};
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+
+function getInputs(){
+  return{
+    specialty:document.getElementById('specialty').value,
+    arBalance:parseFloat(document.getElementById('ar-balance').value)||500000,
+    monthlyRev:parseFloat(document.getElementById('monthly-rev').value)||300000,
+    over90:parseFloat(document.getElementById('over90').value)||20
+  };
+}
+
+function calcDAR(arBalance,monthlyRev){return Math.round((arBalance/(monthlyRev/30)))}
+
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+n}
+
+function liveCalc(){
+  const i=getInputs();
+  const b=BENCHMARKS[i.specialty];
+  const dar=calcDAR(i.arBalance,i.monthlyRev);
+  const dailyRev=i.monthlyRev/30;
+  const excessDays=Math.max(0,dar-b.avg);
+  const excessCash=Math.round(excessDays*dailyRev);
+  document.getElementById('prev-dar').textContent=dar+'d';
+  document.getElementById('prev-excess').textContent=excessCash>0?fmt(excessCash):'On target';
+  const ec=document.getElementById('prev-excess-card');
+  ec.className='b-card '+(excessCash>0?'warn':'good');
+}
+
+function buildResults(){
+  const i=getInputs();
+  const b=BENCHMARKS[i.specialty];
+  const dar=calcDAR(i.arBalance,i.monthlyRev);
+  const dailyRev=i.monthlyRev/30;
+  const gapFromBest=dar-b.best;
+  const gapFromAvg=dar-b.avg;
+  const excessCash=Math.round(Math.max(0,gapFromAvg)*dailyRev);
+  const potentialCash=Math.round(Math.max(0,gapFromBest)*dailyRev);
+
+  document.getElementById('r-dar').textContent=dar+'d';
+
+  const heroEl=document.getElementById('hero-card');
+  heroEl.style.background=dar<=b.best?'var(--green)':dar<=b.avg?'var(--teal)':dar<=b.avg*1.3?'var(--amber)':'var(--red)';
+  document.getElementById('r-hero-sub').textContent=b.name+' benchmark: '+b.avg+' days avg · '+b.best+' days best in class';
+
+  document.getElementById('r-benchmark').textContent=b.avg+'d';
+  document.getElementById('r-gap').textContent=(gapFromAvg>0?'+':'')+gapFromAvg+'d';
+  const gapCard=document.getElementById('r-gap-card');
+  gapCard.className='b-card '+(gapFromAvg>0?'warn':'good');
+
+  document.getElementById('r-cash').textContent=excessCash>0?fmt(excessCash):'None';
+  document.getElementById('r-cash-card').className='b-card '+(excessCash>0?'warn':'good');
+
+  const over90Rating=i.over90<=15?'✓ Strong':i.over90<=25?'⚠ At Risk':'✗ Critical';
+  document.getElementById('r-over90-rating').textContent=over90Rating;
+
+  setTimeout(()=>{
+    const scale=90;
+    document.getElementById('bar-best').style.width=(b.best/scale*100)+'%';
+    document.getElementById('bar-spec').style.width=(b.avg/scale*100)+'%';
+    document.getElementById('bar-spec-val').textContent=b.avg+'d';
+    document.getElementById('bar-you').style.width=Math.min(dar/scale*100,100)+'%';
+    document.getElementById('bar-you-val').textContent=dar+'d';
+    document.getElementById('bar-you').style.background=dar<=b.best?'var(--green)':dar<=b.avg?'var(--teal)':dar<=b.avg*1.3?'var(--amber)':'var(--red)';
+    document.getElementById('r-verdict').textContent=
+      dar<=b.best?'✓ Best in class — top quartile for '+b.name:
+      dar<=b.avg?'↑ Below average — '+gapFromAvg+' days from benchmark':
+      '⚠ Above benchmark — '+fmt(excessCash)+' in recoverable cash';
+  },150);
+
+  const recs=[];
+  if(i.over90>15)recs.push({icon:'📋',title:'Work your 90+ day bucket first',desc:'Claims over 90 days have dramatically lower collection rates. Dedicate specific staff time daily to this bucket — prioritize by dollar amount, not date.',impact:'Reducing 90+ from '+i.over90+'% to 15% recovers an estimated '+fmt(Math.round((i.over90-15)/100*i.arBalance)),bg:'var(--red-bg)'});
+  if(dar>b.avg)recs.push({icon:'⚡',title:'Accelerate first-pass claim submission',desc:'Same-day or next-day claim submission after service dramatically reduces DAR. Audit your documentation-to-submission lag.',impact:'Each day faster submission = '+fmt(Math.round(dailyRev))+' faster cash flow',bg:'var(--amber-bg)'});
+  recs.push({icon:'🔄',title:'Implement automated denial follow-up',desc:'Set automated tasks for denied claims at 7, 14, and 30 days. Most practices leave 15–20% of denied claim value uncollected.',impact:'Typical recovery: 60–70% of worked denials',bg:'var(--purple-bg)'});
+  if(potentialCash>0)recs.push({icon:'💰',title:'Target best-in-class DAR',desc:'Reaching '+b.best+' day DAR from your current '+dar+' days would free up an estimated '+fmt(potentialCash)+' in cash.',impact:''+gapFromBest+' day improvement opportunity',bg:'var(--green-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'DARBenchmarker',specialty:i.specialty,daysInAR:dar,specialtyBenchmark:b.avg,bestInClass:b.best,gapFromBenchmark:gapFromAvg,excessCash:excessCash,over90Pct:i.over90};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+liveCalc();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go-Live Readiness Checklist · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--amber);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--amber)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--amber)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--amber);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--amber)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.checklist{padding:2rem 0 4rem}
+.prog{height:2px;background:var(--border);position:sticky;top:57px;z-index:99}
+.prog-fill{height:100%;background:var(--amber);transition:width .3s ease;width:0%}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cat-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.cat-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;padding:.2rem .55rem;border-radius:2px}
+.cat-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text)}
+.cat-score{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--muted);margin-left:auto}
+.check-item{display:flex;align-items:flex-start;gap:.875rem;padding:.625rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+.check-item:last-child{border-bottom:none}
+.check-box{width:20px;height:20px;min-width:20px;border:1.5px solid var(--border);border-radius:3px;display:grid;place-items:center;margin-top:1px;transition:all .12s;flex-shrink:0}
+.check-item.checked .check-box{background:var(--green);border-color:var(--green)}
+.check-item.checked .check-box::after{content:'✓';font-size:.75rem;color:white;font-weight:600}
+.check-item.critical .check-box{border-color:var(--red)}
+.check-label{font-size:.88rem;color:var(--text);line-height:1.45;flex:1}
+.check-item.checked .check-label{color:var(--muted);text-decoration:line-through}
+.check-tag{font-family:'DM Mono',monospace;font-size:.65rem;padding:.15rem .4rem;border-radius:2px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;margin-top:2px}
+.tag-critical{background:var(--red-bg);color:var(--red)}
+.tag-important{background:var(--amber-bg);color:var(--amber)}
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding-top:1.25rem;border-top:1px solid var(--border);gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}
+.nav-status{font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.score-hero{border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.score-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.score-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.score-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.blockers{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.blocker-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.blocker-item{display:flex;align-items:flex-start;gap:.75rem;padding:.625rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.blocker-item:last-child{border-bottom:none}
+.blocker-icon{color:var(--red);font-size:1rem;flex-shrink:0;margin-top:1px}
+.blocker-text{color:var(--mid);line-height:1.4}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--amber)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid{grid-template-columns:1fr}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Execute · Go-Live Checklist</span>
+</div>
+<div class="prog"><div class="prog-fill" id="prog"></div></div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Is your practice <em>actually ready to go live?</em></h1>
+    <p class="lead">Most healthcare technology implementations fail not because the software is bad, but because the organization wasn't ready to use it. This checklist catches the gaps before they become post-launch crises.</p>
+    <button class="btn btn-primary" onclick="go('s-checklist')">Start the Checklist <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">32 items · ~5 minutes · Printable results</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">70%</div><div class="stat-l">Implementations fail due to change management</div></div>
+      <div><div class="stat-n">3x</div><div class="stat-l">Cost to fix post-launch vs. pre-launch</div></div>
+      <div><div class="stat-n">90%</div><div class="stat-l">Issues catchable with proper readiness review</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-checklist" class="screen">
+  <div class="wrap"><div class="checklist">
+
+    <div class="cat-card">
+      <div class="cat-head"><span class="cat-badge" style="background:var(--red)">Critical</span><span class="cat-title">Technical Readiness</span><span class="cat-score" id="score-tech">0/8</span></div>
+      <div id="cat-tech">
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">All integrations tested end-to-end in a staging environment</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">HIPAA Business Associate Agreements (BAAs) signed with all vendors</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Data migration completed and validated — no patient records missing</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Backup and disaster recovery procedures tested</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">User access roles and permissions configured and reviewed</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Network and hardware requirements confirmed at all locations</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Rollback plan documented and tested if go-live fails</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Performance testing completed under expected load</div><span class="check-tag tag-important">Important</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-head"><span class="cat-badge" style="background:var(--amber)">Training</span><span class="cat-title">Staff Readiness</span><span class="cat-score" id="score-staff">0/8</span></div>
+      <div id="cat-staff">
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">All staff trained on new workflows before go-live date</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Super-users identified and trained to support peers</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Training materials documented and accessible post-launch</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Staff have completed hands-on practice in staging environment</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Change resistance addressed — staff understand the "why"</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Leadership visibly supportive and communicating go-live date</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">On-site support staffed for first week post-launch</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Issue escalation path clear to all staff</div><span class="check-tag tag-important">Important</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-head"><span class="cat-badge" style="background:var(--teal)">Operations</span><span class="cat-title">Operational Readiness</span><span class="cat-score" id="score-ops">0/8</span></div>
+      <div id="cat-ops">
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">New workflows documented — not just the software, but the process</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">KPIs and success metrics defined for post-launch measurement</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Parallel processing plan in place for first 2–4 weeks</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Patient communication plan ready if system affects scheduling or access</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Vendor support contract and SLA reviewed and confirmed</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Go-live date communicated to referring providers if applicable</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Billing continuity confirmed — no claims submission gap expected</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Post-launch review scheduled for 30 days out</div><span class="check-tag tag-important">Important</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <div class="cat-head"><span class="cat-badge" style="background:var(--green)">Compliance</span><span class="cat-title">Compliance & Security</span><span class="cat-score" id="score-comp">0/8</span></div>
+      <div id="cat-comp">
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">HIPAA Security Rule requirements reviewed for new system</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Audit logging enabled and tested</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item critical" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Data encryption confirmed at rest and in transit</div><span class="check-tag tag-critical">Critical</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Password policies and MFA configured</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Staff trained on PHI handling in new system</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Incident response procedure updated to include new system</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Payer credentialing and enrollment unaffected by transition</div><span class="check-tag tag-important">Important</span></div>
+        <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-label">Legal and compliance sign-off obtained if required</div><span class="check-tag tag-important">Important</span></div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <span class="nav-status" id="nav-status">0 of 32 items complete</span>
+      <div style="display:flex;gap:.625rem">
+        <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+        <button class="btn btn-primary" onclick="go('s-results');buildResults()">See Readiness Score <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Go-Live Readiness Score</h2>
+
+    <div class="score-hero" id="r-hero">
+      <div class="score-label">Overall Readiness</div>
+      <div class="score-num" id="r-score">—</div>
+      <div class="score-sub" id="r-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card" id="r-tech-card"><div class="b-val" id="r-tech">—</div><div class="b-label">Technical readiness</div></div>
+      <div class="b-card" id="r-staff-card"><div class="b-val" id="r-staff">—</div><div class="b-label">Staff readiness</div></div>
+      <div class="b-card" id="r-ops-card"><div class="b-val" id="r-ops">—</div><div class="b-label">Operational readiness</div></div>
+      <div class="b-card" id="r-comp-card"><div class="b-val" id="r-comp">—</div><div class="b-label">Compliance readiness</div></div>
+    </div>
+
+    <div class="blockers" id="r-blockers-section">
+      <div class="blocker-title">Unchecked Critical Items — Resolve Before Go-Live</div>
+      <div id="r-blockers"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Track your HIPAA compliance gaps too</div>
+      <p class="cta-body">Readiness goes beyond go-live. The HIPAA Compliance Gap Tracker helps you assess your ongoing administrative safeguard posture.</p>
+      <div class="cta-btns">
+        <a href="hipaa-gap-tracker.html" class="btn btn-primary">HIPAA Gap Tracker →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+let checkedItems=new Set();
+let criticalItems=[];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);updateProg()}
+
+function toggle(el){
+  const idx=Array.from(document.querySelectorAll('.check-item')).indexOf(el);
+  if(checkedItems.has(idx)){checkedItems.delete(idx);el.classList.remove('checked')}
+  else{checkedItems.add(idx);el.classList.add('checked')}
+  updateProg();updateCategoryScores();
+}
+
+function updateProg(){
+  const total=document.querySelectorAll('.check-item').length;
+  const done=checkedItems.size;
+  document.getElementById('prog').style.width=(done/total*100)+'%';
+  document.getElementById('nav-status').textContent=done+' of '+total+' items complete';
+}
+
+function getCategoryScore(catId){
+  const cat=document.getElementById(catId);
+  if(!cat)return{done:0,total:0};
+  const items=cat.querySelectorAll('.check-item');
+  let done=0;
+  items.forEach((item,i)=>{if(item.classList.contains('checked'))done++});
+  return{done,total:items.length,pct:Math.round(done/items.length*100)};
+}
+
+function updateCategoryScores(){
+  const cats=[{id:'cat-tech',scoreId:'score-tech'},{id:'cat-staff',scoreId:'score-staff'},{id:'cat-ops',scoreId:'score-ops'},{id:'cat-comp',scoreId:'score-comp'}];
+  cats.forEach(c=>{const s=getCategoryScore(c.id);document.getElementById(c.scoreId).textContent=s.done+'/'+s.total});
+}
+
+function buildResults(){
+  const tech=getCategoryScore('cat-tech');
+  const staff=getCategoryScore('cat-staff');
+  const ops=getCategoryScore('cat-ops');
+  const comp=getCategoryScore('cat-comp');
+  const overall=Math.round((tech.pct+staff.pct+ops.pct+comp.pct)/4);
+
+  const hero=document.getElementById('r-hero');
+  hero.style.background=overall>=90?'var(--green)':overall>=70?'var(--amber)':'var(--red)';
+  document.getElementById('r-score').textContent=overall+'%';
+  document.getElementById('r-sub').textContent=
+    overall>=90?'Ready to go live — resolve any remaining critical items':
+    overall>=70?'Nearly ready — address gaps before committing to a go-live date':
+    'Not ready — significant gaps must be closed before launch';
+
+  const setCard=(id,cardId,score)=>{
+    document.getElementById(id).textContent=score.pct+'%';
+    document.getElementById(cardId).className='b-card '+(score.pct>=90?'good':score.pct>=70?'warn':'bad');
+  };
+  setCard('r-tech','r-tech-card',tech);
+  setCard('r-staff','r-staff-card',staff);
+  setCard('r-ops','r-ops-card',ops);
+  setCard('r-comp','r-comp-card',comp);
+
+  const uncheckedCritical=Array.from(document.querySelectorAll('.check-item.critical')).filter(el=>!el.classList.contains('checked'));
+  const blockerSection=document.getElementById('r-blockers-section');
+  if(uncheckedCritical.length===0){
+    blockerSection.style.display='none';
+  } else {
+    blockerSection.style.display='block';
+    document.getElementById('r-blockers').innerHTML=uncheckedCritical.map(el=>`
+      <div class="blocker-item"><div class="blocker-icon">⚠</div><div class="blocker-text">${el.querySelector('.check-label').textContent}</div></div>`).join('');
+  }
+
+  window._aiContext = {tool:'GoLiveChecklist',overallReadiness:overall,technicalReadiness:tech.pct,staffReadiness:staff.pct,operationalReadiness:ops.pct,complianceReadiness:comp.pct,uncheckedCriticalItems:uncheckedCritical.length};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+document.addEventListener('DOMContentLoaded',updateCategoryScores);
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPI Maturity Scorer · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.prog{height:2px;background:var(--border);position:sticky;top:57px;z-index:99}
+.prog-fill{height:100%;background:var(--teal);transition:width .3s ease;width:0%}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.assess{padding:2rem 0 4rem}
+.sec-group{margin-bottom:2rem}
+.sec-head{display:flex;align-items:center;gap:.625rem;margin-bottom:1rem}
+.badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--teal);padding:.2rem .55rem;border-radius:2px}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.qblock{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem}
+.qnum{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);display:block;margin-bottom:.375rem}
+.qtext{font-size:.92rem;font-weight:500;color:var(--text);margin-bottom:.875rem;line-height:1.45}
+.opts{display:flex;flex-direction:column;gap:.4rem}
+.opt{display:flex;align-items:flex-start;gap:.625rem;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:.88rem;color:var(--mid);line-height:1.4;transition:border-color .12s,background .12s}
+.opt:hover{border-color:#a8d4d4;background:var(--teal-bg)}
+.opt input{display:none}
+.opt.sel{border-color:var(--teal);background:var(--teal-bg);color:var(--teal);font-weight:500}
+.radio{width:15px;height:15px;min-width:15px;border:1.5px solid var(--border);border-radius:50%;margin-top:2px;display:grid;place-items:center;transition:border-color .12s,background .12s;flex-shrink:0}
+.opt.sel .radio{border-color:var(--teal);background:var(--teal)}
+.opt.sel .radio::after{content:'';width:5px;height:5px;border-radius:50%;background:white}
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding-top:1.25rem;border-top:1px solid var(--border);gap:.75rem;flex-wrap:wrap}
+.nav-status{font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.score-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.5rem}
+.ring{width:88px;height:88px;position:relative;flex-shrink:0}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7}
+.ring-bg{stroke:var(--border)}
+.ring-fg{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transition:stroke-dashoffset 1.1s ease}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1;color:var(--text)}
+.ring-sub{font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.score-info{flex:1}
+.score-grade{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.25rem}
+.score-desc{font-size:.88rem;color:var(--mid);line-height:1.5;margin-bottom:.75rem}
+.tag{display:inline-block;padding:.2rem .55rem;border-radius:2px;font-size:.7rem;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.tag-crit{background:var(--red-bg);color:var(--red)}
+.tag-risk{background:var(--amber-bg);color:var(--amber)}
+.tag-dev{background:var(--teal-bg);color:var(--teal)}
+.tag-opt{background:var(--green-bg);color:var(--green)}
+.maturity-levels{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ml-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.ml-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.875rem}
+.ml-label{font-size:.82rem;color:var(--mid);width:180px;min-width:180px}
+.ml-track{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.ml-bar{height:100%;border-radius:4px;transition:width .9s ease}
+.ml-score{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:28px;text-align:right}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--teal);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.score-card{flex-direction:column;align-items:flex-start}.ml-label{width:120px;min-width:120px}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Operationalize · KPI Maturity</span>
+</div>
+<div class="prog"><div class="prog-fill" id="prog"></div></div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>How mature is your <em>operational reporting?</em></h1>
+    <p class="lead">Most specialty care practices track some metrics. Few track the right ones, in real time, in a way that drives decisions. KPI maturity is the single biggest predictor of whether operational improvements stick — or quietly revert after go-live.</p>
+    <button class="btn btn-primary" onclick="go('s-assess')">Score My KPI Maturity <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">8 questions · ~4 minutes · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">15%</div><div class="stat-l">Practices with real-time KPI dashboards</div></div>
+      <div><div class="stat-n">3x</div><div class="stat-l">Faster issue detection with live reporting</div></div>
+      <div><div class="stat-n">20%</div><div class="stat-l">Revenue improvement with data-driven ops</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-assess" class="screen">
+  <div class="wrap"><div class="assess">
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge">Data</span><span class="sec-title">Data Collection</span></div>
+      <div class="qblock">
+        <span class="qnum">Q1</span>
+        <p class="qtext">How do you currently collect operational data (scheduling, billing, clinical)?</p>
+        <div class="opts" data-q="q1">
+          <label class="opt"><input type="radio" name="q1" value="0"><div class="radio"></div>Mostly manual — spreadsheets, paper logs, or memory</label>
+          <label class="opt"><input type="radio" name="q1" value="30"><div class="radio"></div>Partially digital — EHR has data but extraction is manual</label>
+          <label class="opt"><input type="radio" name="q1" value="65"><div class="radio"></div>Mostly automated — data flows into reports with some manual steps</label>
+          <label class="opt"><input type="radio" name="q1" value="100"><div class="radio"></div>Fully automated — integrated data from all systems, updated in real time</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q2</span>
+        <p class="qtext">How frequently does your leadership team review operational metrics?</p>
+        <div class="opts" data-q="q2">
+          <label class="opt"><input type="radio" name="q2" value="0"><div class="radio"></div>Rarely or never — we look at financials but not operations</label>
+          <label class="opt"><input type="radio" name="q2" value="30"><div class="radio"></div>Monthly — we pull reports when problems arise</label>
+          <label class="opt"><input type="radio" name="q2" value="65"><div class="radio"></div>Weekly — structured review of key metrics</label>
+          <label class="opt"><input type="radio" name="q2" value="100"><div class="radio"></div>Daily — real-time dashboards reviewed in stand-ups</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--amber)">Metrics</span><span class="sec-title">What You Measure</span></div>
+      <div class="qblock">
+        <span class="qnum">Q3</span>
+        <p class="qtext">Which operational KPIs does your practice actively track?</p>
+        <div class="opts" data-q="q3">
+          <label class="opt"><input type="radio" name="q3" value="0"><div class="radio"></div>Revenue and basic financials only</label>
+          <label class="opt"><input type="radio" name="q3" value="30"><div class="radio"></div>Financials plus scheduling (utilization, no-shows)</label>
+          <label class="opt"><input type="radio" name="q3" value="65"><div class="radio"></div>Financials, scheduling, and RCM (DAR, denial rate, clean claim)</label>
+          <label class="opt"><input type="radio" name="q3" value="100"><div class="radio"></div>All of the above plus workforce, intake, and patient outcomes</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q4</span>
+        <p class="qtext">How are KPI targets set in your organization?</p>
+        <div class="opts" data-q="q4">
+          <label class="opt"><input type="radio" name="q4" value="0"><div class="radio"></div>We don't have formal targets</label>
+          <label class="opt"><input type="radio" name="q4" value="30"><div class="radio"></div>Targets exist but aren't benchmarked against industry standards</label>
+          <label class="opt"><input type="radio" name="q4" value="65"><div class="radio"></div>Targets are benchmarked and reviewed annually</label>
+          <label class="opt"><input type="radio" name="q4" value="100"><div class="radio"></div>Targets are benchmarked, reviewed quarterly, and tied to compensation</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--green)">Action</span><span class="sec-title">How Data Drives Decisions</span></div>
+      <div class="qblock">
+        <span class="qnum">Q5</span>
+        <p class="qtext">When a KPI goes off track, what typically happens?</p>
+        <div class="opts" data-q="q5">
+          <label class="opt"><input type="radio" name="q5" value="0"><div class="radio"></div>We often don't know until it affects revenue</label>
+          <label class="opt"><input type="radio" name="q5" value="30"><div class="radio"></div>We notice at month-end and discuss it retrospectively</label>
+          <label class="opt"><input type="radio" name="q5" value="65"><div class="radio"></div>We catch it within a week and assign ownership</label>
+          <label class="opt"><input type="radio" name="q5" value="100"><div class="radio"></div>Alerts trigger automatically and action is taken within 24–48 hours</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q6</span>
+        <p class="qtext">How accessible are operational metrics to frontline staff and managers?</p>
+        <div class="opts" data-q="q6">
+          <label class="opt"><input type="radio" name="q6" value="0"><div class="radio"></div>Only leadership has access to reporting</label>
+          <label class="opt"><input type="radio" name="q6" value="30"><div class="radio"></div>Managers get monthly summaries</label>
+          <label class="opt"><input type="radio" name="q6" value="65"><div class="radio"></div>Managers have dashboard access; some frontline visibility</label>
+          <label class="opt"><input type="radio" name="q6" value="100"><div class="radio"></div>Role-appropriate dashboards for all levels — frontline to leadership</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q7</span>
+        <p class="qtext">How do you use data to improve clinical outcomes, not just operations?</p>
+        <div class="opts" data-q="q7">
+          <label class="opt"><input type="radio" name="q7" value="0"><div class="radio"></div>We don't connect operational data to clinical outcomes</label>
+          <label class="opt"><input type="radio" name="q7" value="30"><div class="radio"></div>We track patient satisfaction but not clinical progress metrics</label>
+          <label class="opt"><input type="radio" name="q7" value="65"><div class="radio"></div>We track outcomes by provider and program</label>
+          <label class="opt"><input type="radio" name="q7" value="100"><div class="radio"></div>Outcome data drives scheduling, staffing, and program decisions</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q8</span>
+        <p class="qtext">How would you describe your organization's overall data culture?</p>
+        <div class="opts" data-q="q8">
+          <label class="opt"><input type="radio" name="q8" value="0"><div class="radio"></div>Gut-driven — decisions are made on experience and intuition</label>
+          <label class="opt"><input type="radio" name="q8" value="30"><div class="radio"></div>Data-aware — we reference numbers but don't always act on them</label>
+          <label class="opt"><input type="radio" name="q8" value="65"><div class="radio"></div>Data-informed — most decisions include a data component</label>
+          <label class="opt"><input type="radio" name="q8" value="100"><div class="radio"></div>Data-driven — decisions require data justification and are tracked</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <span class="nav-status" id="nav-status">0 of 8 answered</span>
+      <div style="display:flex;gap:.625rem">
+        <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+        <button class="btn btn-primary" onclick="submit()">View My Score <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>KPI Maturity Score</h2>
+
+    <div class="score-card">
+      <div class="ring">
+        <svg viewBox="0 0 88 88"><circle class="ring-bg" cx="44" cy="44" r="36"/><circle class="ring-fg" id="ring-fg" cx="44" cy="44" r="36"/></svg>
+        <div class="ring-center"><span class="ring-num" id="r-score">0</span><span class="ring-sub">/ 100</span></div>
+      </div>
+      <div class="score-info">
+        <div class="score-grade" id="r-grade">—</div>
+        <p class="score-desc" id="r-desc">—</p>
+        <span class="tag" id="r-tag">—</span>
+      </div>
+    </div>
+
+    <div class="maturity-levels">
+      <div class="ml-title">Score by Dimension</div>
+      <div class="ml-row"><div class="ml-label">Data collection</div><div class="ml-track"><div class="ml-bar" id="ml-collect" style="background:var(--teal)"></div></div><div class="ml-score" id="ms-collect">—</div></div>
+      <div class="ml-row"><div class="ml-label">Metric coverage</div><div class="ml-track"><div class="ml-bar" id="ml-coverage" style="background:var(--amber)"></div></div><div class="ml-score" id="ms-coverage">—</div></div>
+      <div class="ml-row"><div class="ml-label">Action & response</div><div class="ml-track"><div class="ml-bar" id="ml-action" style="background:var(--green)"></div></div><div class="ml-score" id="ms-action">—</div></div>
+      <div class="ml-row"><div class="ml-label">Data culture</div><div class="ml-track"><div class="ml-bar" id="ml-culture" style="background:var(--purple)"></div></div><div class="ml-score" id="ms-culture">—</div></div>
+    </div>
+
+    <div class="recs">
+      <div class="ml-title" style="margin-bottom:1rem">How to Level Up</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Complete your operations picture</div>
+      <p class="cta-body">KPI maturity is the foundation for sustaining every other operational improvement. IntakeIQ scores all five domains in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-primary">Try IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const A={};
+const QS=['q1','q2','q3','q4','q5','q6','q7','q8'];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);updateProg()}
+function updateProg(){const done=QS.filter(q=>A[q]!==undefined).length;document.getElementById('prog').style.width=(done/8*100)+'%';const el=document.getElementById('nav-status');if(el)el.textContent=done+' of 8 answered'}
+
+document.querySelectorAll('.opts').forEach(group=>{
+  group.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      const radio=opt.querySelector('input');radio.checked=true;A[radio.name]=parseInt(radio.value);
+      group.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));opt.classList.add('sel');updateProg();
+    });
+  });
+});
+
+function avg(qs){const vals=qs.map(q=>A[q]||0);return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)}
+function animN(id,from,to,dur){const el=document.getElementById(id),start=performance.now();(function step(now){const t=Math.min((now-start)/dur,1);el.textContent=Math.round(from+(to-from)*t);if(t<1)requestAnimationFrame(step)})(start)}
+
+function submit(){
+  if(QS.filter(q=>A[q]!==undefined).length<5){alert('Please answer at least 5 questions.');return}
+  const collect=avg(['q1','q2']);
+  const coverage=avg(['q3','q4']);
+  const action=avg(['q5','q6']);
+  const culture=avg(['q7','q8']);
+  const overall=avg(['q1','q2','q3','q4','q5','q6','q7','q8']);
+
+  go('s-results');
+
+  setTimeout(()=>{
+    const circ=226;
+    document.getElementById('ring-fg').style.strokeDashoffset=circ-(overall/100*circ);
+    document.getElementById('ring-fg').style.stroke=overall>=75?'var(--green)':overall>=50?'var(--teal)':overall>=25?'var(--amber)':'var(--red)';
+    animN('r-score',0,overall,1100);
+    ['collect','coverage','action','culture'].forEach((d,i)=>{
+      const score=[collect,coverage,action,culture][i];
+      document.getElementById('ml-'+d).style.width=score+'%';
+      document.getElementById('ms-'+d).textContent=score;
+    });
+  },80);
+
+  const grades=[
+    [75,'Data-Driven Organization','tag-opt','Your practice has strong measurement infrastructure. Focus on expanding metric coverage and closing remaining gaps in real-time visibility.'],
+    [50,'Data-Informed Practice','tag-dev','You have meaningful data capability but gaps in timeliness and coverage are limiting its impact. The next level requires automation and tighter action loops.'],
+    [25,'Data-Aware But Reactive','tag-risk','Data exists but isn\'t driving proactive decisions. Invest in dashboards and a weekly review rhythm before expanding metric coverage.'],
+    [0,'Data Gaps Are Limiting Growth','tag-crit','Without operational data, you\'re managing by feel. This is the highest-leverage improvement available to your organization right now.']
+  ];
+  const g=grades.find(([t])=>overall>=t);
+  document.getElementById('r-grade').textContent=g[1];
+  document.getElementById('r-desc').textContent=g[3];
+  document.getElementById('r-tag').textContent=g[1];
+  document.getElementById('r-tag').className='tag '+g[2];
+
+  const recs=[];
+  if(collect<65)recs.push({icon:'📊',title:'Automate data collection from your EHR and billing system',desc:'Manual reporting creates lag, errors, and staff burden. Most modern EHRs have reporting APIs or export functions that can feed a simple dashboard without custom development.',impact:'Automated collection reduces reporting lag from weeks to hours',bg:'var(--teal-bg)'});
+  if(coverage<65)recs.push({icon:'📋',title:'Expand beyond financial metrics to operational KPIs',desc:'DAR, denial rate, utilization, no-show rate, and referral conversion are the five most impactful operational KPIs. If you\'re not tracking them weekly, you\'re missing your early warning system.',impact:'5 core KPIs cover 80% of operational risk in specialty care',bg:'var(--amber-bg)'});
+  if(action<65)recs.push({icon:'⚡',title:'Build a weekly operational review rhythm',desc:'A 30-minute weekly ops review with 5–10 core metrics creates more accountability than any annual planning session. Make it standing, short, and metrics-first.',impact:'Weekly reviews surface issues 4–6 weeks earlier than monthly reviews',bg:'var(--green-bg)'});
+  if(culture<65)recs.push({icon:'🎯',title:'Tie at least one KPI to manager accountability',desc:'Data culture follows incentives. When a manager\'s performance review includes a KPI they own — utilization rate, denial rate, referral conversion — behavior changes.',impact:'Ownership of 1 KPI per manager drives 25–40% faster improvement',bg:'var(--purple-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'KPIMaturityScorer',overallScore:overall,dataCollectionScore:collect,metricCoverageScore:coverage,actionResponseScore:action,dataCultureScore:culture};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

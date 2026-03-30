@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build vs. Buy Analyzer · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--purple);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--purple)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--purple)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--purple);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--purple)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.assess{padding:2rem 0 4rem}
+.prog{height:2px;background:var(--border);position:sticky;top:57px;z-index:99}
+.prog-fill{height:100%;background:var(--purple);transition:width .3s ease;width:0%}
+.sec-group{margin-bottom:2rem}
+.sec-head{display:flex;align-items:center;gap:.625rem;margin-bottom:1rem}
+.badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.sec-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.qblock{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem}
+.qnum{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted);display:block;margin-bottom:.375rem}
+.qtext{font-size:.92rem;font-weight:500;color:var(--text);margin-bottom:.875rem;line-height:1.45}
+.opts{display:flex;flex-direction:column;gap:.4rem}
+.opt{display:flex;align-items:flex-start;gap:.625rem;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:.88rem;color:var(--mid);line-height:1.4;transition:border-color .12s,background .12s}
+.opt:hover{border-color:#c4b8e8;background:var(--purple-bg)}
+.opt input{display:none}
+.opt.sel{border-color:var(--purple);background:var(--purple-bg);color:var(--purple);font-weight:500}
+.radio{width:15px;height:15px;min-width:15px;border:1.5px solid var(--border);border-radius:50%;margin-top:2px;display:grid;place-items:center;transition:border-color .12s,background .12s;flex-shrink:0}
+.opt.sel .radio{border-color:var(--purple);background:var(--purple)}
+.opt.sel .radio::after{content:'';width:5px;height:5px;border-radius:50%;background:white}
+.nav-row{display:flex;align-items:center;justify-content:space-between;padding-top:1.25rem;border-top:1px solid var(--border);gap:.75rem;flex-wrap:wrap}
+.nav-status{font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.verdict-hero{border-radius:var(--r);padding:2.5rem 2rem;margin-bottom:1.25rem;text-align:center}
+.verdict-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.625rem}
+.verdict-main{font-family:'DM Serif Display',serif;font-size:2rem;color:white;line-height:1.1;margin-bottom:.5rem}
+.verdict-sub{font-size:.9rem;color:rgba(255,255,255,.85)}
+.score-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;text-align:center}
+.s-val{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--text);margin-bottom:.25rem}
+.s-label{font-size:.78rem;color:var(--muted);line-height:1.3}
+.s-card.best{border-color:var(--purple);background:var(--purple-bg)}.s-card.best .s-val{color:var(--purple)}
+.factors{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.factors-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.factor-row{display:flex;align-items:flex-start;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.factor-row:last-child{border-bottom:none}
+.factor-icon{font-size:1rem;width:24px;flex-shrink:0;margin-top:1px}
+.factor-label{font-weight:500;color:var(--text);margin-bottom:.2rem}
+.factor-desc{font-size:.82rem;color:var(--mid);line-height:1.4}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--purple)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.score-grid{grid-template-columns:1fr}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Decide · Build vs. Buy</span>
+</div>
+<div class="prog"><div class="prog-fill" id="prog"></div></div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Should you <em>build, buy, or configure</em> this solution?</h1>
+    <p class="lead">The build vs. buy decision is one of the most consequential a healthcare operator makes. Get it wrong and you spend 18 months on a project that a $400/month SaaS could have solved. This framework helps you decide systematically.</p>
+    <button class="btn btn-primary" onclick="go('s-assess')">Start the Analysis <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">8 questions · ~4 minutes · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">70%</div><div class="stat-l">Custom builds exceed budget</div></div>
+      <div><div class="stat-n">2x</div><div class="stat-l">Avg custom build timeline slip</div></div>
+      <div><div class="stat-n">60%</div><div class="stat-l">SaaS deployments under 90 days</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-assess" class="screen">
+  <div class="wrap"><div class="assess">
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge">Context</span><span class="sec-title">The Problem</span></div>
+      <div class="qblock">
+        <span class="qnum">Q1</span>
+        <p class="qtext">How unique is the workflow or process you're trying to solve?</p>
+        <div class="opts" data-q="q1">
+          <label class="opt"><input type="radio" name="q1" value="buy"><div class="radio"></div>Standard — this is a common healthcare operations problem</label>
+          <label class="opt"><input type="radio" name="q1" value="config"><div class="radio"></div>Mostly standard with some customization needed</label>
+          <label class="opt"><input type="radio" name="q1" value="build"><div class="radio"></div>Highly specific to our organization or care model</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q2</span>
+        <p class="qtext">How quickly do you need this solution live?</p>
+        <div class="opts" data-q="q2">
+          <label class="opt"><input type="radio" name="q2" value="buy"><div class="radio"></div>Within 30–60 days — we need it now</label>
+          <label class="opt"><input type="radio" name="q2" value="config"><div class="radio"></div>Within 3–6 months — reasonable runway</label>
+          <label class="opt"><input type="radio" name="q2" value="build"><div class="radio"></div>12+ months is acceptable — we're planning ahead</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--amber)">Resources</span><span class="sec-title">Internal Capability</span></div>
+      <div class="qblock">
+        <span class="qnum">Q3</span>
+        <p class="qtext">What is your organization's internal technical capability?</p>
+        <div class="opts" data-q="q3">
+          <label class="opt"><input type="radio" name="q3" value="buy"><div class="radio"></div>Minimal — we rely on vendors for all technology</label>
+          <label class="opt"><input type="radio" name="q3" value="config"><div class="radio"></div>Moderate — we have IT staff and can configure platforms</label>
+          <label class="opt"><input type="radio" name="q3" value="build"><div class="radio"></div>Strong — we have developers and can build custom solutions</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q4</span>
+        <p class="qtext">What is your available budget for this initiative?</p>
+        <div class="opts" data-q="q4">
+          <label class="opt"><input type="radio" name="q4" value="buy"><div class="radio"></div>Under $50K — limited budget, need proven ROI fast</label>
+          <label class="opt"><input type="radio" name="q4" value="config"><div class="radio"></div>$50K–$250K — meaningful investment with board approval</label>
+          <label class="opt"><input type="radio" name="q4" value="build"><div class="radio"></div>$250K+ — strategic investment with multi-year horizon</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-group">
+      <div class="sec-head"><span class="badge" style="background:var(--green)">Strategic Fit</span><span class="sec-title">Long-Term Considerations</span></div>
+      <div class="qblock">
+        <span class="qnum">Q5</span>
+        <p class="qtext">Does this solution need to integrate deeply with your existing EHR or billing systems?</p>
+        <div class="opts" data-q="q5">
+          <label class="opt"><input type="radio" name="q5" value="buy"><div class="radio"></div>Minimal integration needed — can operate alongside existing systems</label>
+          <label class="opt"><input type="radio" name="q5" value="config"><div class="radio"></div>Moderate integration — needs API connections to key systems</label>
+          <label class="opt"><input type="radio" name="q5" value="build"><div class="radio"></div>Deep integration required — must be tightly coupled to core systems</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q6</span>
+        <p class="qtext">Is this workflow a core differentiator for your organization?</p>
+        <div class="opts" data-q="q6">
+          <label class="opt"><input type="radio" name="q6" value="buy"><div class="radio"></div>No — it's operational infrastructure, not a competitive advantage</label>
+          <label class="opt"><input type="radio" name="q6" value="config"><div class="radio"></div>Somewhat — we want it configured to our way of working</label>
+          <label class="opt"><input type="radio" name="q6" value="build"><div class="radio"></div>Yes — this is core IP and a strategic differentiator</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q7</span>
+        <p class="qtext">How mature are the existing vendor solutions in this space?</p>
+        <div class="opts" data-q="q7">
+          <label class="opt"><input type="radio" name="q7" value="buy"><div class="radio"></div>Very mature — multiple proven vendors with established products</label>
+          <label class="opt"><input type="radio" name="q7" value="config"><div class="radio"></div>Developing — some vendors exist but none fully solve our problem</label>
+          <label class="opt"><input type="radio" name="q7" value="build"><div class="radio"></div>Immature — no vendor adequately addresses our use case</label>
+        </div>
+      </div>
+      <div class="qblock">
+        <span class="qnum">Q8</span>
+        <p class="qtext">What is your organization's risk tolerance for this project?</p>
+        <div class="opts" data-q="q8">
+          <label class="opt"><input type="radio" name="q8" value="buy"><div class="radio"></div>Low — we need predictable costs and timelines</label>
+          <label class="opt"><input type="radio" name="q8" value="config"><div class="radio"></div>Moderate — we can absorb some uncertainty with proper governance</label>
+          <label class="opt"><input type="radio" name="q8" value="build"><div class="radio"></div>Higher — we're comfortable with longer timelines for the right outcome</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <span class="nav-status" id="nav-status">0 of 8 answered</span>
+      <div style="display:flex;gap:.625rem">
+        <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+        <button class="btn btn-primary" onclick="submit()">See Recommendation <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Build vs. Buy Recommendation</h2>
+
+    <div class="verdict-hero" id="r-hero">
+      <div class="verdict-label">Recommendation</div>
+      <div class="verdict-main" id="r-verdict">—</div>
+      <div class="verdict-sub" id="r-verdict-sub">—</div>
+    </div>
+
+    <div class="score-grid">
+      <div class="s-card" id="r-buy-card"><div class="s-val" id="r-buy-score">—</div><div class="s-label">Buy score<br>(off-the-shelf SaaS)</div></div>
+      <div class="s-card" id="r-config-card"><div class="s-val" id="r-config-score">—</div><div class="s-label">Configure score<br>(low-code platform)</div></div>
+      <div class="s-card" id="r-build-card"><div class="s-val" id="r-build-score">—</div><div class="s-label">Build score<br>(custom development)</div></div>
+    </div>
+
+    <div class="factors">
+      <div class="factors-title">Key Factors Driving This Recommendation</div>
+      <div id="r-factors"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Build the financial case</div>
+      <p class="cta-body">Now that you know your approach, use the Automation ROI Builder to quantify the business case and get to a decision-ready number.</p>
+      <div class="cta-btns">
+        <a href="automation-roi-builder.html" class="btn btn-primary">Automation ROI Builder →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const A={};
+const QUESTIONS=['q1','q2','q3','q4','q5','q6','q7','q8'];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);updateProg()}
+function updateProg(){const done=QUESTIONS.filter(q=>A[q]).length;document.getElementById('prog').style.width=(done/8*100)+'%';const el=document.getElementById('nav-status');if(el)el.textContent=done+' of 8 answered'}
+
+document.querySelectorAll('.opts').forEach(group=>{
+  group.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      const radio=opt.querySelector('input');
+      radio.checked=true;A[radio.name]=radio.value;
+      group.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      opt.classList.add('sel');updateProg();
+    });
+  });
+});
+
+function submit(){
+  if(QUESTIONS.filter(q=>A[q]).length<5){alert('Please answer at least 5 questions.');return}
+  const scores={buy:0,config:0,build:0};
+  QUESTIONS.forEach(q=>{if(A[q])scores[A[q]]++});
+  const winner=Object.keys(scores).reduce((a,b)=>scores[a]>=scores[b]?a:b);
+
+  go('s-results');
+
+  const colors={buy:'var(--teal)',config:'var(--purple)',build:'var(--amber)'};
+  const hero=document.getElementById('r-hero');
+  hero.style.background=colors[winner];
+
+  const labels={
+    buy:{main:'Buy an off-the-shelf solution',sub:'The market has proven products for this problem. Buy, configure minimally, and deploy fast.'},
+    config:{main:'Configure a low-code platform',sub:'Your needs are specific enough to require customization, but not so unique that you need custom code. Low-code platforms like Appian give you the flexibility without the build risk.'},
+    build:{main:'Build a custom solution',sub:'Your use case is sufficiently unique, strategic, or technically constrained that custom development is the right answer — with appropriate governance.'}
+  };
+  document.getElementById('r-verdict').textContent=labels[winner].main;
+  document.getElementById('r-verdict-sub').textContent=labels[winner].sub;
+
+  ['buy','config','build'].forEach(k=>{
+    document.getElementById('r-'+k+'-score').textContent=scores[k]+'/8';
+    document.getElementById('r-'+k+'-card').className='s-card '+(k===winner?'best':'');
+  });
+
+  const factorMap={
+    q1:{buy:'Standard workflow — proven SaaS solutions exist',config:'Mix of standard and custom — platform approach optimal',build:'Unique workflow — custom logic required'},
+    q2:{buy:'Urgent timeline — only off-the-shelf can deliver',config:'Moderate timeline — platform deployment feasible',build:'Long timeline acceptable — supports custom build'},
+    q3:{buy:'Limited IT — vendor-managed solution reduces risk',config:'Moderate IT — can configure and maintain platform',build:'Strong IT — internal capability supports custom development'},
+    q4:{buy:'Constrained budget — SaaS has lowest entry cost',config:'Mid-range budget — platform investment appropriate',build:'Strategic budget — supports custom development investment'},
+    q5:{buy:'Minimal integration — SaaS with standard APIs works',config:'API integration needed — platform handles this well',build:'Deep integration — requires custom development'},
+    q6:{buy:'Not differentiating — commodity infrastructure',config:'Somewhat differentiating — configurable platform',build:'Core IP — proprietary build justified'},
+    q7:{buy:'Mature vendor market — buy the proven solution',config:'Developing market — configure around gaps',build:'Immature market — must build what doesn\'t exist'},
+    q8:{buy:'Low risk tolerance — SaaS has predictable outcomes',config:'Moderate risk tolerance — platform is manageable',build:'Higher risk tolerance — custom build accepted'}
+  };
+
+  const factors=QUESTIONS.filter(q=>A[q]).map(q=>({
+    match:A[q]===winner,text:factorMap[q][A[q]],key:q
+  }));
+
+  document.getElementById('r-factors').innerHTML=factors.map(f=>`
+    <div class="factor-row">
+      <div class="factor-icon">${f.match?'✓':'→'}</div>
+      <div><div class="factor-desc">${f.text}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'BuildVsBuy',recommendation:winner,buyScore:scores.buy,configScore:scores.config,buildScore:scores.build,answeredQuestions:QUESTIONS.filter(q=>A[q]).length};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

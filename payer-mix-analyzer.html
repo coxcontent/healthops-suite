@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payer Mix Analyzer · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--purple);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--purple)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--purple)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--purple);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--purple)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:1.25rem}
+.payer-row{display:grid;grid-template-columns:1fr 80px 80px;gap:.75rem;align-items:center;margin-bottom:.75rem}
+.payer-row:first-child{margin-bottom:.5rem}
+.payer-head{font-size:.75rem;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.payer-name{font-size:.88rem;font-weight:500;color:var(--text);padding:.5rem 0}
+input[type=number]{width:100%;padding:.6rem .75rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield;text-align:center}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--purple)}
+.total-row{display:grid;grid-template-columns:1fr 80px 80px;gap:.75rem;align-items:center;padding-top:.75rem;border-top:1px solid var(--border);margin-top:.25rem}
+.total-label{font-size:.88rem;font-weight:600;color:var(--text)}
+.total-val{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:600;text-align:center}
+.total-val.ok{color:var(--green)}.total-val.warn{color:var(--amber)}.total-val.bad{color:var(--red)}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-full{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+.input-full::-webkit-outer-spin-button,.input-full::-webkit-inner-spin-button{-webkit-appearance:none}
+.input-full:focus{border-color:var(--purple)}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.has-prefix .input-full{padding-left:2rem}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.impact-hero{background:var(--purple);border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.impact-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.impact-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.impact-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.payer-chart{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.chart-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.1rem}
+.chart-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.75rem}
+.chart-label{font-size:.82rem;color:var(--mid);width:120px;min-width:120px}
+.chart-track{flex:1;height:20px;background:var(--bg);border-radius:3px;overflow:hidden;position:relative}
+.chart-bar{height:100%;border-radius:3px;transition:width .9s ease;display:flex;align-items:center;padding-left:.5rem}
+.chart-bar-label{font-size:.7rem;color:white;font-weight:500;white-space:nowrap}
+.chart-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:36px;text-align:right}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--purple);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--purple)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid{grid-template-columns:1fr}.chart-label{width:80px;min-width:80px}.payer-row,.total-row{grid-template-columns:1fr 65px 65px}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">RCM · Payer Mix Analyzer</span>
+</div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Is your payer mix creating <em>hidden revenue risk?</em></h1>
+    <p class="lead">Payer concentration risk is one of the most overlooked threats in specialty care. When one payer controls more than 40% of your revenue, a rate cut, credentialing issue, or contract dispute can be catastrophic. This tool maps your exposure.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Analyze My Payer Mix <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">Enter your payer mix · ~2 minutes · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">40%</div><div class="stat-l">Max safe payer concentration</div></div>
+      <div><div class="stat-n">60%</div><div class="stat-l">Avg Medicaid-dependent practices</div></div>
+      <div><div class="stat-n">3x</div><div class="stat-l">Rate variance: commercial vs. Medicaid</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Your Payer Mix</div>
+      <p style="font-size:.85rem;color:var(--mid);margin-bottom:1.25rem">Enter the % of your revenue (not patients) from each payer type, and the average reimbursement rate per session. Leave at 0 if not applicable.</p>
+
+      <div class="payer-row">
+        <div class="payer-head">Payer</div>
+        <div class="payer-head" style="text-align:center">% Revenue</div>
+        <div class="payer-head" style="text-align:center">$/Session</div>
+      </div>
+
+      <div class="payer-row"><div class="payer-name">Commercial Insurance</div><input type="number" id="p1-pct" value="35" min="0" max="100" oninput="updateTotal()"><input type="number" id="p1-rate" value="175" min="0" oninput="updateTotal()"></div>
+      <div class="payer-row"><div class="payer-name">Medicaid</div><input type="number" id="p2-pct" value="40" min="0" max="100" oninput="updateTotal()"><input type="number" id="p2-rate" value="95" min="0" oninput="updateTotal()"></div>
+      <div class="payer-row"><div class="payer-name">Medicare</div><input type="number" id="p3-pct" value="10" min="0" max="100" oninput="updateTotal()"><input type="number" id="p3-rate" value="130" min="0" oninput="updateTotal()"></div>
+      <div class="payer-row"><div class="payer-name">Self-pay / private pay</div><input type="number" id="p4-pct" value="10" min="0" max="100" oninput="updateTotal()"><input type="number" id="p4-rate" value="200" min="0" oninput="updateTotal()"></div>
+      <div class="payer-row"><div class="payer-name">Other / managed care</div><input type="number" id="p5-pct" value="5" min="0" max="100" oninput="updateTotal()"><input type="number" id="p5-rate" value="145" min="0" oninput="updateTotal()"></div>
+
+      <div class="total-row">
+        <div class="total-label">Total</div>
+        <div class="total-val" id="total-pct">100%</div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label class="field-label">Monthly sessions delivered</label>
+        <span class="field-hint">Total billable sessions across all payers</span>
+        <input type="number" class="input-full" id="monthly-sessions" value="500" min="1">
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="buildResults()">Analyze My Mix <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Payer Mix Analysis</h2>
+
+    <div class="impact-hero">
+      <div class="impact-label">Blended Revenue Per Session</div>
+      <div class="impact-num" id="r-blended">—</div>
+      <div class="impact-sub" id="r-hero-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card" id="r-conc-card"><div class="b-val" id="r-conc">—</div><div class="b-label">Highest payer concentration</div></div>
+      <div class="b-card" id="r-risk-card"><div class="b-val" id="r-risk">—</div><div class="b-label">Concentration risk rating</div></div>
+      <div class="b-card"><div class="b-val" id="r-annual">—</div><div class="b-label">Estimated annual revenue</div></div>
+      <div class="b-card" id="r-rate-gap-card"><div class="b-val" id="r-rate-gap">—</div><div class="b-label">Revenue gap vs. all-commercial rate</div></div>
+    </div>
+
+    <div class="payer-chart">
+      <div class="chart-title">Revenue by Payer</div>
+      <div id="r-chart"></div>
+    </div>
+
+    <div class="recs">
+      <div class="card-title" style="margin-bottom:1rem">Strategic Recommendations</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">See your full operations score</div>
+      <p class="cta-body">Payer mix is one dimension of revenue cycle health. IntakeIQ benchmarks your full operations in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-teal">Try IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const PAYERS=[
+  {id:'p1',name:'Commercial',color:'#0d7070'},
+  {id:'p2',name:'Medicaid',color:'#b87020'},
+  {id:'p3',name:'Medicare',color:'#6655aa'},
+  {id:'p4',name:'Self-pay',color:'#1a7a45'},
+  {id:'p5',name:'Other',color:'#999990'}
+];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+n}
+
+function updateTotal(){
+  const total=PAYERS.reduce((s,p)=>s+(parseFloat(document.getElementById(p.id+'-pct').value)||0),0);
+  const el=document.getElementById('total-pct');
+  el.textContent=Math.round(total)+'%';
+  el.className='total-val '+(Math.abs(total-100)<1?'ok':total>100?'bad':'warn');
+}
+
+function buildResults(){
+  const sessions=parseInt(document.getElementById('monthly-sessions').value)||500;
+  const payers=PAYERS.map(p=>({
+    ...p,
+    pct:parseFloat(document.getElementById(p.id+'-pct').value)||0,
+    rate:parseFloat(document.getElementById(p.id+'-rate').value)||0
+  })).filter(p=>p.pct>0);
+
+  const blended=payers.reduce((s,p)=>s+(p.pct/100)*p.rate,0);
+  const annualRev=Math.round(blended*sessions*12);
+  const maxPayer=payers.reduce((m,p)=>p.pct>m.pct?p:m,{pct:0,name:'None'});
+  const commRate=parseFloat(document.getElementById('p1-rate').value)||175;
+  const gapVsCommercial=Math.round((commRate-blended)*sessions*12);
+
+  go('s-results');
+
+  document.getElementById('r-blended').textContent='$'+Math.round(blended);
+  document.getElementById('r-hero-sub').textContent='Across '+sessions+' sessions/month · '+fmt(annualRev)+' estimated annual revenue';
+  document.getElementById('r-conc').textContent=Math.round(maxPayer.pct)+'% '+maxPayer.name;
+  document.getElementById('r-conc-card').className='b-card '+(maxPayer.pct<=40?'good':maxPayer.pct<=60?'warn':'bad');
+  const riskLabel=maxPayer.pct<=40?'✓ Diversified':maxPayer.pct<=60?'⚠ Moderate Risk':'✗ High Concentration';
+  document.getElementById('r-risk').textContent=riskLabel;
+  document.getElementById('r-risk-card').className='b-card '+(maxPayer.pct<=40?'good':maxPayer.pct<=60?'warn':'bad');
+  document.getElementById('r-annual').textContent=fmt(annualRev);
+  document.getElementById('r-rate-gap').textContent=gapVsCommercial>0?fmt(gapVsCommercial):'None';
+  document.getElementById('r-rate-gap-card').className='b-card '+(gapVsCommercial<50000?'good':gapVsCommercial<200000?'warn':'bad');
+
+  setTimeout(()=>{
+    document.getElementById('r-chart').innerHTML=payers.map(p=>`
+      <div class="chart-row">
+        <div class="chart-label">${p.name}</div>
+        <div class="chart-track"><div class="chart-bar" style="background:${p.color};width:${p.pct}%"><span class="chart-bar-label">${p.pct>8?p.pct+'%':''}</span></div></div>
+        <div class="chart-val">$${p.rate}</div>
+      </div>`).join('');
+  },150);
+
+  const recs=[];
+  if(maxPayer.pct>40)recs.push({icon:'⚖️',title:'Diversify away from '+maxPayer.name+' concentration',desc:'A single payer at '+Math.round(maxPayer.pct)+'% of revenue is a significant business risk. A rate cut of 10% from this payer alone reduces annual revenue by '+fmt(Math.round(annualRev*maxPayer.pct/100*0.1))+'.',impact:'Target: no single payer above 40% of revenue',bg:'var(--red-bg)'});
+  if(gapVsCommercial>100000)recs.push({icon:'💼',title:'Pursue commercial contract growth',desc:'Your blended rate is $'+Math.round(blended)+' vs. $'+Math.round(commRate)+' for commercial payers. Each percentage point shift toward commercial adds '+fmt(Math.round(sessions*12*(commRate-blended)*0.01))+'/yr in revenue.',impact:'10pt shift to commercial: '+fmt(Math.round(sessions*12*(commRate-blended)*0.1))+' additional revenue',bg:'var(--green-bg)'});
+  recs.push({icon:'📊',title:'Track payer mix monthly',desc:'Payer mix shifts slowly but compounds significantly. A monthly dashboard showing revenue by payer gives you early warning of concentration drift before it becomes a crisis.',impact:'Most operators discover adverse trends 6–12 months late without tracking',bg:'var(--purple-bg)'});
+  recs.push({icon:'📋',title:'Review contracts for rate escalators',desc:'Commercial contracts often include annual rate escalators — but only if you invoice for them. Review your top 3 commercial contracts for escalator clauses you may be leaving on the table.',impact:'Unrealized escalators average 2–3% annually',bg:'var(--amber-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'PayerMixAnalyzer',blendedRatePerSession:Math.round(blended),annualRevenue:annualRev,highestPayerConcentration:Math.round(maxPayer.pct),highestPayer:maxPayer.name,revenueGapVsCommercial:gapVsCommercial,monthlySessions:sessions};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+updateTotal();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

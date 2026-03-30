@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turnover Cost Calculator · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--red);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--red)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--red)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--red);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--red)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--red)}
+.has-prefix input{padding-left:2rem}.has-suffix input{padding-right:2.5rem}
+select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;cursor:pointer}
+select:focus{border-color:var(--red)}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.impact-hero{border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.impact-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.impact-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.impact-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.cost-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cost-row{display:flex;align-items:center;justify-content:space-between;padding:.625rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.cost-row:last-child{border-bottom:none;font-weight:600;font-size:.95rem;padding-top:.875rem}
+.cost-label{color:var(--mid)}
+.cost-val{font-family:'DM Mono',monospace;color:var(--text)}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--red);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--red)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid,.preview-grid{grid-template-columns:1fr}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Workforce · Turnover Cost</span>
+</div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>What is staff turnover <em>actually costing your practice?</em></h1>
+    <p class="lead">Most practices track turnover rate. Few calculate its true cost — which includes recruiting, onboarding, lost productivity during vacancy, and the hidden cost of reduced care quality during the learning curve. The number is almost always larger than expected.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Calculate Turnover Cost <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">5 inputs · 60 seconds · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">35%</div><div class="stat-l">Avg turnover, behavioral health</div></div>
+      <div><div class="stat-n">1.5x</div><div class="stat-l">Salary — avg replacement cost</div></div>
+      <div><div class="stat-n">90d</div><div class="stat-l">Avg time-to-fill clinical role</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Your Workforce</div>
+      <div class="field">
+        <label class="field-label" for="total-staff">Total clinical and admin staff</label>
+        <input type="number" id="total-staff" value="20" min="1" oninput="liveCalc()">
+      </div>
+      <div class="field">
+        <label class="field-label" for="turnover-rate">Annual turnover rate</label>
+        <span class="field-hint">% of staff who leave in a given year</span>
+        <div class="input-wrap has-suffix"><input type="number" id="turnover-rate" value="30" min="0" max="100" oninput="liveCalc()"><span class="suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="avg-salary">Average annual salary of departing roles</label>
+        <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="avg-salary" value="55000" min="1" oninput="liveCalc()"></div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="role-type">Primary role type leaving</label>
+        <select id="role-type" onchange="liveCalc()">
+          <option value="clinical">Clinical (therapist, BCBA, RN)</option>
+          <option value="admin">Administrative (billing, scheduling, intake)</option>
+          <option value="mixed">Mixed clinical and admin</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="time-to-fill">Average days to fill an open role</label>
+        <input type="number" id="time-to-fill" value="75" min="1" max="365" oninput="liveCalc()">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Live Estimate</div>
+      <div class="preview-grid">
+        <div class="b-card" id="prev-card1"><div class="b-val" id="prev-turnover-n">—</div><div class="b-label">Staff leaving per year</div></div>
+        <div class="b-card bad"><div class="b-val" id="prev-total">—</div><div class="b-label">Estimated annual turnover cost</div></div>
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results');buildResults()">See Full Report <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Turnover Cost Analysis</h2>
+
+    <div class="impact-hero" id="hero-card" style="background:var(--red)">
+      <div class="impact-label">Estimated Annual Turnover Cost</div>
+      <div class="impact-num" id="r-total">—</div>
+      <div class="impact-sub" id="r-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card"><div class="b-val" id="r-departures">—</div><div class="b-label">Staff departures per year</div></div>
+      <div class="b-card"><div class="b-val" id="r-cost-per">—</div><div class="b-label">Cost per departure</div></div>
+      <div class="b-card bad"><div class="b-val" id="r-vacancy-cost">—</div><div class="b-label">Annual vacancy cost</div></div>
+      <div class="b-card good"><div class="b-val" id="r-savings">—</div><div class="b-label">Savings at 15% turnover rate</div></div>
+    </div>
+
+    <div class="cost-breakdown">
+      <div class="card-title" style="margin-bottom:1rem">Cost Breakdown Per Departure</div>
+      <div class="cost-row"><div class="cost-label">Recruiting & advertising</div><div class="cost-val" id="cb-recruiting">—</div></div>
+      <div class="cost-row"><div class="cost-label">Interviewing & selection time</div><div class="cost-val" id="cb-interview">—</div></div>
+      <div class="cost-row"><div class="cost-label">Onboarding & training</div><div class="cost-val" id="cb-onboarding">—</div></div>
+      <div class="cost-row"><div class="cost-label">Productivity loss during vacancy</div><div class="cost-val" id="cb-vacancy">—</div></div>
+      <div class="cost-row"><div class="cost-label">Ramp-up productivity loss (90 days)</div><div class="cost-val" id="cb-ramp">—</div></div>
+      <div class="cost-row"><div class="cost-label">Total per departure</div><div class="cost-val" id="cb-total">—</div></div>
+    </div>
+
+    <div class="recs">
+      <div class="card-title" style="margin-bottom:1rem">Priority Actions</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">See your full operations score</div>
+      <p class="cta-body">Workforce stability is one of five domains in your operations readiness score. IntakeIQ benchmarks all five in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-teal">Try IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const MULTIPLIERS={clinical:{recruiting:.2,interview:.1,onboarding:.25,ramp:.4},admin:{recruiting:.15,interview:.07,onboarding:.15,ramp:.2},mixed:{recruiting:.18,interview:.09,onboarding:.2,ramp:.3}};
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+n}
+
+function getInputs(){return{totalStaff:parseInt(document.getElementById('total-staff').value)||20,turnoverRate:parseInt(document.getElementById('turnover-rate').value)||30,avgSalary:parseInt(document.getElementById('avg-salary').value)||55000,roleType:document.getElementById('role-type').value,timeToFill:parseInt(document.getElementById('time-to-fill').value)||75}}
+
+function calcCosts(i){
+  const m=MULTIPLIERS[i.roleType];
+  const recruiting=Math.round(i.avgSalary*m.recruiting);
+  const interview=Math.round(i.avgSalary*m.interview);
+  const onboarding=Math.round(i.avgSalary*m.onboarding);
+  const vacancy=Math.round((i.avgSalary/365)*i.timeToFill*0.6);
+  const ramp=Math.round(i.avgSalary*m.ramp);
+  const perDeparture=recruiting+interview+onboarding+vacancy+ramp;
+  const departures=Math.round(i.totalStaff*(i.turnoverRate/100));
+  const total=departures*perDeparture;
+  const savingsAtTarget=Math.round(Math.max(0,departures-Math.round(i.totalStaff*0.15))*perDeparture);
+  return{recruiting,interview,onboarding,vacancy,ramp,perDeparture,departures,total,savingsAtTarget};
+}
+
+function liveCalc(){
+  const i=getInputs();
+  const c=calcCosts(i);
+  document.getElementById('prev-turnover-n').textContent=c.departures+' staff';
+  document.getElementById('prev-total').textContent=fmt(c.total);
+}
+
+function buildResults(){
+  const i=getInputs();
+  const c=calcCosts(i);
+
+  document.getElementById('r-total').textContent=fmt(c.total);
+  document.getElementById('r-sub').textContent=c.departures+' departures · '+fmt(c.perDeparture)+' per departure · '+i.turnoverRate+'% turnover rate';
+  document.getElementById('r-departures').textContent=c.departures+'/yr';
+  document.getElementById('r-cost-per').textContent=fmt(c.perDeparture);
+  document.getElementById('r-vacancy-cost').textContent=fmt(c.departures*c.vacancy);
+  document.getElementById('r-savings').textContent=fmt(c.savingsAtTarget);
+
+  document.getElementById('cb-recruiting').textContent=fmt(c.recruiting);
+  document.getElementById('cb-interview').textContent=fmt(c.interview);
+  document.getElementById('cb-onboarding').textContent=fmt(c.onboarding);
+  document.getElementById('cb-vacancy').textContent=fmt(c.vacancy);
+  document.getElementById('cb-ramp').textContent=fmt(c.ramp);
+  document.getElementById('cb-total').textContent=fmt(c.perDeparture);
+
+  const recs=[];
+  recs.push({icon:'🎯',title:'Identify your highest-attrition roles first',desc:'Turnover is rarely uniform. One role or manager often drives 60–70% of departures. Find the pattern before investing in broad retention programs.',impact:'Targeted retention is 3x more cost-effective than blanket programs',bg:'var(--red-bg)'});
+  if(i.timeToFill>60)recs.push({icon:'⚡',title:'Reduce time-to-fill with a candidate pipeline',desc:'Practices with a standing applicant pool — maintained through university partnerships, referral programs, and ongoing recruiting — fill roles in 30–45 days vs. industry average of 75+ days.',impact:'Each 30-day reduction saves '+fmt(Math.round((i.avgSalary/365)*30*0.6))+' per departure in vacancy cost',bg:'var(--amber-bg)'});
+  recs.push({icon:'📋',title:'Conduct structured 90-day check-ins',desc:'Most clinical attrition happens in the first 6 months. A structured 30-60-90 day check-in process surfaces issues before they become resignations.',impact:'Reduces first-year attrition by 25–35% on average',bg:'var(--green-bg)'});
+  recs.push({icon:'💰',title:'Calculate retention ROI vs. compensation adjustment',desc:'A $5,000 salary increase that retains a clinical employee saves '+fmt(Math.round(c.perDeparture-5000))+' in avoided turnover cost. The math on retention investment is almost always positive.',impact:'Retention ROI is typically 3–8x the cost of the intervention',bg:'var(--teal-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'TurnoverCalculator',turnoverRate:i.turnoverRate,totalStaff:i.totalStaff,annualDepartures:c.departures,costPerDeparture:c.perDeparture,totalAnnualCost:c.total,savingsAt15Pct:c.savingsAtTarget,avgSalary:i.avgSalary,roleType:i.roleType};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+liveCalc();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

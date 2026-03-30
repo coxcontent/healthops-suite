@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No-Show Impact Calculator · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --border: #e0ddd5;
+  --text: #1c1c1a;
+  --mid: #555550;
+  --muted: #999990;
+  --teal: #0d7070;
+  --teal-bg: #eaf4f4;
+  --amber: #b87020;
+  --amber-bg: #fdf3e3;
+  --green: #1a7a45;
+  --green-bg: #eaf5ee;
+  --red: #c0392b;
+  --red-bg: #fdecea;
+  --r: 6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}
+.screen.active{display:block}
+
+/* LANDING */
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:white}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+
+/* CALCULATOR */
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}
+.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--teal)}
+.has-prefix input{padding-left:2rem}
+.has-suffix input{padding-right:2.5rem}
+
+.slider-wrap{margin-top:.5rem}
+input[type=range]{width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid white}
+.slider-labels{display:flex;justify-content:space-between;margin-top:.375rem;font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace}
+.slider-val{text-align:center;font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--teal);margin-top:.375rem}
+
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+
+/* RESULTS */
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+
+/* IMPACT HERO */
+.impact-hero{background:var(--teal);border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.impact-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.5rem}
+.impact-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4rem);color:white;line-height:1;margin-bottom:.375rem}
+.impact-sub{font-size:.88rem;color:rgba(255,255,255,.75)}
+
+/* BREAKDOWN */
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.highlight{background:var(--amber-bg);border-color:#e8c080}
+.b-card.highlight .b-val{color:var(--amber)}
+
+/* BENCHMARK */
+.bench{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.bench-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.1rem}
+.bench-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.75rem}
+.bench-label{font-size:.82rem;color:var(--mid);width:140px;min-width:140px}
+.bench-track{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bench-bar{height:100%;border-radius:4px;transition:width .9s ease}
+.bench-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:36px;text-align:right}
+.your-marker{position:relative}
+.your-label{font-size:.75rem;color:var(--teal);font-weight:500;margin-top:.375rem;font-family:'DM Mono',monospace}
+
+/* RECOMMENDATIONS */
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}
+.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-text{flex:1}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--teal);margin-top:.375rem}
+
+/* CTA */
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+
+@media(max-width:500px){
+  .breakdown-grid{grid-template-columns:1fr}
+  .bench-label{width:100px;min-width:100px;font-size:.76rem}
+  .stats{gap:1.25rem}
+}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box">
+      <svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg>
+    </div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Scheduling · No-Show Calculator</span>
+</div>
+
+<!-- LANDING -->
+<div id="s-land" class="screen active">
+  <div class="wrap">
+    <div class="land">
+      <p class="eyebrow">Free Tool · coxcontent.com</p>
+      <h1>What are no-shows <em>actually costing</em> your practice?</h1>
+      <p class="lead">Most practices underestimate no-show cost by 40–60% because they only count lost session revenue. This calculator includes staff time, slot opportunity cost, and the compounding effect on annual capacity.</p>
+      <button class="btn btn-primary" onclick="go('s-calc')">
+        Calculate My Cost
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="land-meta">4 inputs · 60 seconds · No signup</p>
+      <hr>
+      <div class="stats">
+        <div><div class="stat-n">15%</div><div class="stat-l">Avg specialty care no-show rate</div></div>
+        <div><div class="stat-n">$150</div><div class="stat-l">Avg cost per no-show</div></div>
+        <div><div class="stat-n">40%</div><div class="stat-l">Recoverable with systems</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div id="s-calc" class="screen">
+  <div class="wrap">
+    <div class="calc">
+
+      <div class="card">
+        <div class="card-title">Your Practice</div>
+
+        <div class="field">
+          <label class="field-label" for="appts">Weekly appointments scheduled</label>
+          <span class="field-hint">Total across all providers</span>
+          <input type="number" id="appts" value="100" min="1" max="5000" oninput="liveCalc()">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="rate">Current no-show / late cancel rate</label>
+          <div class="slider-wrap">
+            <input type="range" id="rate" min="1" max="40" value="15" oninput="updateSlider('rate','rate-val','%'); liveCalc()">
+            <div class="slider-val" id="rate-val">15%</div>
+            <div class="slider-labels"><span>1%</span><span>Industry avg 15%</span><span>40%</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="revenue">Average revenue per session</label>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="revenue" value="150" min="1" max="2000" oninput="liveCalc()">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="staff">Staff hourly cost (admin time to manage no-shows)</label>
+          <span class="field-hint">Include wage + benefits. Typical range $20–$45/hr.</span>
+          <div class="input-wrap has-prefix">
+            <span class="prefix">$</span>
+            <input type="number" id="staff" value="28" min="10" max="100" oninput="liveCalc()">
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE PREVIEW -->
+      <div class="card" id="preview-card">
+        <div class="card-title">Live Estimate</div>
+        <div class="breakdown-grid">
+          <div class="b-card">
+            <div class="b-val" id="prev-weekly">—</div>
+            <div class="b-label">Weekly revenue lost</div>
+          </div>
+          <div class="b-card highlight">
+            <div class="b-val" id="prev-annual">—</div>
+            <div class="b-label">Annual total cost</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-btn-row">
+        <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+        <button class="btn btn-primary" onclick="go('s-results'); buildResults()">
+          See Full Analysis
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="s-results" class="screen">
+  <div class="wrap">
+    <div class="results">
+      <p class="res-eyebrow">Your Results</p>
+      <h2>No-Show Cost Analysis</h2>
+
+      <div class="impact-hero">
+        <div class="impact-label">Estimated Annual No-Show Cost</div>
+        <div class="impact-num" id="r-total">—</div>
+        <div class="impact-sub" id="r-sub">—</div>
+      </div>
+
+      <div class="breakdown-grid">
+        <div class="b-card">
+          <div class="b-val" id="r-weekly">—</div>
+          <div class="b-label">Lost per week</div>
+        </div>
+        <div class="b-card">
+          <div class="b-val" id="r-slots">—</div>
+          <div class="b-label">Empty slots per week</div>
+        </div>
+        <div class="b-card">
+          <div class="b-val" id="r-staff-cost">—</div>
+          <div class="b-label">Annual staff time cost</div>
+        </div>
+        <div class="b-card highlight">
+          <div class="b-val" id="r-recoverable">—</div>
+          <div class="b-label">Recoverable with backfill system</div>
+        </div>
+      </div>
+
+      <div class="bench">
+        <div class="bench-title">How You Compare</div>
+        <div class="bench-row">
+          <div class="bench-label">Best in class</div>
+          <div class="bench-track"><div class="bench-bar" id="bar-best" style="background:var(--green)"></div></div>
+          <div class="bench-val">5%</div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Industry average</div>
+          <div class="bench-track"><div class="bench-bar" id="bar-avg" style="background:var(--amber)"></div></div>
+          <div class="bench-val">15%</div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-label">Your rate</div>
+          <div class="bench-track"><div class="bench-bar" id="bar-you" style="background:var(--teal)"></div></div>
+          <div class="bench-val" id="bar-you-val">—</div>
+        </div>
+        <div class="your-label" id="bench-verdict">—</div>
+      </div>
+
+      <div class="recs">
+        <div class="card-title" style="margin-bottom:1rem">Highest-Impact Fixes</div>
+        <div id="r-recs"></div>
+      </div>
+
+      <div class="cta-card">
+        <div class="cta-title">Run a full operations diagnostic</div>
+        <p class="cta-body">No-shows are one signal. IntakeIQ scores your entire operation — intake, prior auth, scheduling, revenue cycle, and workforce — in 3 minutes.</p>
+        <div class="cta-btns">
+          <a href="intakeiq-v3.html" class="btn btn-primary">Try IntakeIQ →</a>
+          <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+        </div>
+      </div>
+
+      <div class="ai-recs">
+        <div class="ai-recs-header">
+          <span class="ai-badge">AI</span>
+          <span class="ai-recs-title">Recommendations</span>
+        </div>
+        <div id="ai-recs-body"></div>
+      </div>
+
+      <div class="foot">
+        <div class="foot-name">cox<span>content</span>.com</div>
+        <div class="foot-sub">Free resources for specialty care operators</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function updateSlider(id, valId, suffix) {
+  document.getElementById(valId).textContent = document.getElementById(id).value + suffix;
+}
+
+function getInputs() {
+  return {
+    appts: parseInt(document.getElementById('appts').value) || 100,
+    rate: parseInt(document.getElementById('rate').value) || 15,
+    revenue: parseInt(document.getElementById('revenue').value) || 150,
+    staff: parseInt(document.getElementById('staff').value) || 28
+  };
+}
+
+function calc(i) {
+  const noShowSlots = Math.round(i.appts * (i.rate / 100));
+  const weeklyRevLost = noShowSlots * i.revenue;
+  const annualRevLost = weeklyRevLost * 52;
+  // 20 min staff time per no-show (call, rebook, notes)
+  const staffCostPerNoShow = (i.staff / 60) * 20;
+  const annualStaffCost = Math.round(noShowSlots * staffCostPerNoShow * 52);
+  const totalAnnual = annualRevLost + annualStaffCost;
+  const recoverable = Math.round(totalAnnual * 0.4);
+  return { noShowSlots, weeklyRevLost, annualRevLost, annualStaffCost, totalAnnual, recoverable };
+}
+
+function fmt(n) {
+  if(n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if(n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + n;
+}
+
+function liveCalc() {
+  const i = getInputs();
+  const r = calc(i);
+  document.getElementById('prev-weekly').textContent = fmt(r.weeklyRevLost);
+  document.getElementById('prev-annual').textContent = fmt(r.totalAnnual);
+}
+
+function buildResults() {
+  const i = getInputs();
+  const r = calc(i);
+
+  document.getElementById('r-total').textContent = fmt(r.totalAnnual);
+  document.getElementById('r-sub').textContent =
+    i.rate + '% no-show rate · ' + r.noShowSlots + ' empty slots/week · ' + fmt(r.weeklyRevLost) + ' lost/week';
+  document.getElementById('r-weekly').textContent = fmt(r.weeklyRevLost);
+  document.getElementById('r-slots').textContent = r.noShowSlots + ' slots';
+  document.getElementById('r-staff-cost').textContent = fmt(r.annualStaffCost);
+  document.getElementById('r-recoverable').textContent = fmt(r.recoverable);
+
+  // Benchmark bars
+  setTimeout(() => {
+    document.getElementById('bar-best').style.width = '12.5%';  // 5/40 scale
+    document.getElementById('bar-avg').style.width = '37.5%';   // 15/40 scale
+    const yourPct = Math.min((i.rate / 40) * 100, 100);
+    document.getElementById('bar-you').style.width = yourPct + '%';
+    document.getElementById('bar-you-val').textContent = i.rate + '%';
+    document.getElementById('bar-you').style.background =
+      i.rate <= 7 ? 'var(--green)' : i.rate <= 15 ? 'var(--teal)' : i.rate <= 22 ? 'var(--amber)' : 'var(--red)';
+    document.getElementById('bench-verdict').textContent =
+      i.rate <= 7 ? '✓ Best in class — top quartile performance' :
+      i.rate <= 12 ? '↑ Below average — meaningful room to improve' :
+      i.rate <= 20 ? '⚠ At industry average — significant opportunity' :
+      '⚠ Above average — this is your highest priority fix';
+  }, 150);
+
+  // Recommendations
+  const recs = [];
+  if (i.rate > 8) recs.push({
+    title: 'Automated reminder sequence',
+    desc: 'SMS + email reminders at 72hr, 24hr, and 2hr before appointment. Reduces no-shows by 30–50% on average.',
+    impact: 'Typical impact: ' + fmt(Math.round(r.totalAnnual * 0.35)) + '/yr recovered',
+    color: 'var(--teal-bg)', icon: '📱'
+  });
+  recs.push({
+    title: 'Digital waitlist with auto-backfill',
+    desc: 'When a slot opens, automatically notify the next waitlisted patient. Eliminates staff phone time and recovers 40–60% of cancelled slots.',
+    impact: 'Typical impact: ' + fmt(Math.round(r.weeklyRevLost * 0.4 * 52)) + '/yr recovered',
+    color: 'var(--green-bg)', icon: '🔄'
+  });
+  if (i.rate > 15) recs.push({
+    title: 'Cancellation policy with deposit',
+    desc: 'A $25–$50 deposit or 24-hour cancellation fee meaningfully reduces late cancellations without harming patient relationships when applied consistently.',
+    impact: 'Behavioral reduction: 15–25% fewer late cancels',
+    color: 'var(--amber-bg)', icon: '📋'
+  });
+  recs.push({
+    title: 'No-show pattern analysis by payer and provider',
+    desc: 'Track which payers, appointment types, and providers drive your no-show rate. Often 20% of slots drive 60% of no-shows.',
+    impact: 'Enables targeted intervention vs. blanket policy',
+    color: 'var(--teal-bg)', icon: '📊'
+  });
+
+  document.getElementById('r-recs').innerHTML = recs.map(rec => `
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${rec.color}">${rec.icon}</div>
+      <div class="rec-text">
+        <div class="rec-title">${rec.title}</div>
+        <div class="rec-desc">${rec.desc}</div>
+        <div class="rec-impact">${rec.impact}</div>
+      </div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'NoShowCalculator',noShowRate:i.rate,weeklySlots:i.appts,emptySlots:r.noShowSlots,weeklyRevLost:r.weeklyRevLost,annualTotalCost:r.totalAnnual,annualStaffCost:r.annualStaffCost,recoverable:r.recoverable};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+// Init live calc
+liveCalc();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

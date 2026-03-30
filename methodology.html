@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Methodology — Healthcare Operations Intelligence · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --border: #e0ddd5;
+  --text: #1c1c1a;
+  --mid: #555550;
+  --muted: #999990;
+  --teal: #0d7070;
+  --teal-bg: #eaf4f4;
+  --amber: #b87020;
+  --amber-bg: #fdf3e3;
+  --green: #1a7a45;
+  --green-bg: #eaf5ee;
+  --purple: #6655aa;
+  --purple-bg: #f0eefa;
+  --red: #c0392b;
+  --red-bg: #fdecea;
+  --r: 6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* NAV */
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-link{font-size:.82rem;color:var(--mid);text-decoration:none;font-family:'DM Mono',monospace;letter-spacing:.04em}
+.nav-link:hover{color:var(--teal)}
+.nav-cta{padding:.45rem 1rem;background:var(--teal);color:white;border-radius:var(--r);font-size:.82rem;font-weight:500;text-decoration:none;white-space:nowrap}
+.nav-cta:hover{opacity:.9}
+
+/* LAYOUT */
+.wrap{max-width:720px;margin:0 auto;padding:0 1.25rem}
+
+/* HERO */
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border)}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3rem);line-height:1.12;margin-bottom:1.25rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.hero-lead{font-size:1.05rem;color:var(--mid);max-width:560px;line-height:1.7;margin-bottom:2rem}
+.hero-meta{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);display:flex;gap:1.5rem;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:.375rem}
+.meta-dot{width:5px;height:5px;border-radius:50%;background:var(--teal)}
+
+/* SECTION SPACING */
+.section{padding:3rem 0;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text);margin-bottom:1rem;line-height:1.2}
+h3{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text);margin-bottom:.5rem}
+p{color:var(--mid);margin-bottom:1rem;font-size:.97rem}
+p:last-child{margin-bottom:0}
+
+/* CALLOUT */
+.callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:var(--r);padding:1.25rem 1.5rem;margin:1.5rem 0}
+.callout p{color:var(--text);font-size:.95rem;font-weight:400}
+
+/* PHASE GRID */
+.phase-grid{display:flex;flex-direction:column;gap:1rem;margin:1.75rem 0}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;gap:1.25rem;align-items:flex-start}
+.phase-num{font-family:'DM Mono',monospace;font-size:.7rem;color:white;background:var(--teal);padding:.2rem .5rem;border-radius:2px;white-space:nowrap;margin-top:2px}
+.phase-body{}
+.phase-name{font-weight:500;font-size:.95rem;color:var(--text);margin-bottom:.25rem}
+.phase-desc{font-size:.87rem;color:var(--mid);line-height:1.5;margin:0}
+
+/* DOMAIN GRID */
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin:1.75rem 0}
+.domain-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.domain-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;padding:.2rem .5rem;border-radius:2px;display:inline-block;margin-bottom:.625rem}
+.domain-name{font-weight:500;font-size:.92rem;color:var(--text);margin-bottom:.35rem}
+.domain-desc{font-size:.82rem;color:var(--mid);line-height:1.5;margin:0}
+.domain-tools{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+.domain-tools-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.375rem}
+.tool-pill{display:inline-block;font-size:.75rem;color:var(--mid);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:.15rem .45rem;margin:.15rem .15rem 0 0}
+
+/* ROADMAP */
+.roadmap{margin:1.75rem 0}
+.rm-phase{margin-bottom:1.75rem}
+.rm-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.625rem}
+.rm-items{display:flex;flex-direction:column;gap:.5rem}
+.rm-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.875rem 1.125rem;display:flex;align-items:center;gap:.875rem}
+.rm-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-live{background:var(--green)}
+.status-next{background:var(--amber)}
+.status-planned{background:var(--border)}
+.rm-name{font-size:.9rem;font-weight:500;color:var(--text);flex:1}
+.rm-domain{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)}
+.rm-link{font-size:.78rem;color:var(--teal);text-decoration:none;font-weight:500;white-space:nowrap}
+.rm-link:hover{text-decoration:underline}
+
+/* ABOUT */
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-top:1.75rem;display:flex;gap:1.5rem;align-items:flex-start}
+.about-icon{width:44px;height:44px;background:var(--teal-bg);border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--teal)}
+.about-name{font-weight:500;font-size:.95rem;color:var(--text);margin-bottom:.2rem}
+.about-bio{font-size:.87rem;color:var(--mid);line-height:1.55;margin:0}
+.about-link{display:inline-block;margin-top:.625rem;font-size:.82rem;color:var(--teal);text-decoration:none;font-family:'DM Mono',monospace}
+.about-link:hover{text-decoration:underline}
+
+/* CTA STRIP */
+.cta-strip{background:var(--teal);border-radius:var(--r);padding:2rem;margin:2rem 0;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.cta-strip-text{}
+.cta-strip-title{font-family:'DM Serif Display',serif;font-size:1.3rem;color:white;margin-bottom:.25rem}
+.cta-strip-sub{font-size:.88rem;color:rgba(255,255,255,.75)}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.75rem 1.5rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;border:none;text-decoration:none;transition:opacity .15s}
+.btn-white{background:white;color:var(--teal)}
+.btn-white:hover{opacity:.92}
+.btn-outline{background:transparent;color:white;border:1px solid rgba(255,255,255,.4)}
+.btn-outline:hover{background:rgba(255,255,255,.1)}
+
+/* FOOTER */
+.foot{padding:2.5rem 0;text-align:center}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.95rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.3rem}
+
+@media(max-width:540px){
+  .domain-grid{grid-template-columns:1fr}
+  .nav-links{gap:.875rem}
+  .about-card{flex-direction:column}
+  .cta-strip{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="https://coxcontent.com" class="logo">
+    <div class="logo-box">
+      <svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg>
+    </div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#tools" class="nav-link">Tools</a>
+    <a href="#methodology" class="nav-link">Method</a>
+    <a href="intakeiq.html" class="nav-cta">Try IntakeIQ →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Healthcare Operations Intelligence · Working Project</p>
+    <h1>Quantifying the decisions <em>operators make every day</em></h1>
+    <p class="hero-lead">This is an open, evolving library of diagnostic tools and frameworks built to help specialty care operators measure, benchmark, and improve the administrative decisions that drive — or drain — their practices.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="meta-dot"></div>Free to use, forever</div>
+      <div class="meta-item"><div class="meta-dot"></div>No login required</div>
+      <div class="meta-item"><div class="meta-dot"></div>Built by an operator, for operators</div>
+      <div class="meta-item"><div class="meta-dot"></div>Expanding continuously</div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY THIS EXISTS -->
+<div class="section" id="methodology">
+  <div class="wrap">
+    <p class="eyebrow">Why This Exists</p>
+    <h2>Administrative decisions are under-measured</h2>
+    <p>Healthcare operators make hundreds of administrative decisions every week — when to send an authorization, how to fill a cancelled slot, when a claim is likely to be denied, whether a referral is likely to convert. Most of these decisions are made on instinct, not data.</p>
+    <p>The tools here are designed to change that. Each one takes a single operational question — the kind that gets answered informally a dozen times a day — and gives it a structured framework, a benchmark, and a quantified output. Not to replace operator judgment, but to sharpen it.</p>
+
+    <div class="callout">
+      <p>This project started with a simple observation: the gap between how well-run healthcare organizations operate and how average ones operate is almost entirely explained by administrative decisions, not clinical ones. The clinical care is often comparable. The operations rarely are.</p>
+    </div>
+
+    <p>Every tool published here is part of a larger attempt to document that gap — to give it numbers, benchmarks, and frameworks that any operator can apply without a consultant, a software license, or a six-month implementation.</p>
+  </div>
+</div>
+
+<!-- THE METHODOLOGY -->
+<div class="section">
+  <div class="wrap">
+    <p class="eyebrow">The Framework</p>
+    <h2>Six phases, one through-line</h2>
+    <p>The tools are organized around a six-phase methodology adapted from enterprise solutions selling frameworks — specifically, the sequence of how complex operational problems actually get solved in practice. The phases run in order, but real organizations move between them continuously.</p>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <span class="phase-num">01</span>
+        <div class="phase-body">
+          <div class="phase-name">Listen</div>
+          <p class="phase-desc">Understand what leadership, staff, and patients are actually experiencing before diagnosing anything. Surface the presenting problem without assuming you know the root cause.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase-num">02</span>
+        <div class="phase-body">
+          <div class="phase-name">Diagnose</div>
+          <p class="phase-desc">Identify the real operational gap — not the symptom, but the system. Score current state against benchmarks across intake, auth, scheduling, revenue cycle, and workforce domains.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase-num">03</span>
+        <div class="phase-body">
+          <div class="phase-name">Recommend</div>
+          <p class="phase-desc">Translate findings into prioritized, defensible recommendations. Model the ROI of different interventions and help operators understand their tradeoffs before committing resources.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase-num">04</span>
+        <div class="phase-body">
+          <div class="phase-name">Decide</div>
+          <p class="phase-desc">Support the decision with the right artifacts — business cases, stakeholder frameworks, approval pathway maps. Get the right people to yes with confidence.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase-num">05</span>
+        <div class="phase-body">
+          <div class="phase-name">Execute</div>
+          <p class="phase-desc">Implement with discipline. Scoping tools, sprint frameworks, go-live checklists, and HIPAA compliance guides for the build-out phase where most initiatives stall or succeed.</p>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase-num">06</span>
+        <div class="phase-body">
+          <div class="phase-name">Operationalize</div>
+          <p class="phase-desc">Sustain, measure, and improve. KPI dashboards, performance benchmarkers, and continuous improvement trackers for organizations that have implemented change and need to hold the gains.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>Each tool in this library maps to one of these phases. The diagnostic tools (like IntakeIQ) live in phases 1–2. Calculators and ROI models live in phase 3. Implementation guides live in phases 4–5. Dashboards and benchmarkers live in phase 6.</p>
+  </div>
+</div>
+
+<!-- DOMAINS -->
+<div class="section" id="tools">
+  <div class="wrap">
+    <p class="eyebrow">The Domains</p>
+    <h2>Five operational areas, dozens of utilities</h2>
+    <p>Every tool targets one of five operational domains in specialty care. Each domain has a flagship diagnostic and a growing set of deeper utilities — one for each question the diagnostic raises.</p>
+
+    <div class="domain-grid">
+      <div class="domain-card">
+        <span class="domain-tag" style="background:var(--teal)">Intake & Access</span>
+        <div class="domain-name">Patient Access & Intake</div>
+        <p class="domain-desc">Referral conversion, wait time benchmarking, intake automation readiness.</p>
+        <div class="domain-tools">
+          <div class="domain-tools-label">Utilities</div>
+          <span class="tool-pill">IntakeIQ ✓ Live</span>
+          <span class="tool-pill">Wait Time Benchmarker</span>
+          <span class="tool-pill">Referral Leakage Calculator</span>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <span class="domain-tag" style="background:var(--amber)">Prior Auth</span>
+        <div class="domain-name">Prior Authorization</div>
+        <p class="domain-desc">Denial rate analysis, auth timeline benchmarking, appeal ROI modeling.</p>
+        <div class="domain-tools">
+          <div class="domain-tools-label">Utilities</div>
+          <span class="tool-pill">Auth Denial Rate Scorer</span>
+          <span class="tool-pill">Appeal ROI Calculator</span>
+          <span class="tool-pill">Payer Performance Map</span>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <span class="domain-tag" style="background:var(--green)">Scheduling</span>
+        <div class="domain-name">Scheduling & Capacity</div>
+        <p class="domain-desc">No-show impact, utilization optimization, backfill efficiency.</p>
+        <div class="domain-tools">
+          <div class="domain-tools-label">Utilities</div>
+          <span class="tool-pill">No-Show Impact Calculator</span>
+          <span class="tool-pill">Utilization Rate Scorer</span>
+          <span class="tool-pill">Capacity Gap Analyzer</span>
+        </div>
+      </div>
+
+      <div class="domain-card">
+        <span class="domain-tag" style="background:var(--purple)">Revenue Cycle</span>
+        <div class="domain-name">Revenue Cycle Management</div>
+        <p class="domain-desc">A/R benchmarking, clean claim rate analysis, billing integration scoring.</p>
+        <div class="domain-tools">
+          <div class="domain-tools-label">Utilities</div>
+          <span class="tool-pill">DAR Benchmarker</span>
+          <span class="tool-pill">Clean Claim Rate Scorer</span>
+          <span class="tool-pill">RCM Integration Checker</span>
+        </div>
+      </div>
+
+      <div class="domain-card" style="grid-column:1/-1">
+        <span class="domain-tag" style="background:var(--red)">Workforce & Ops</span>
+        <div class="domain-name">Workforce & Operational Intelligence</div>
+        <p class="domain-desc">Turnover cost modeling, staffing ratio analysis, KPI maturity scoring, and interoperability readiness.</p>
+        <div class="domain-tools">
+          <div class="domain-tools-label">Utilities</div>
+          <span class="tool-pill">Turnover Cost Calculator</span>
+          <span class="tool-pill">Staffing Ratio Analyzer</span>
+          <span class="tool-pill">KPI Maturity Scorer</span>
+          <span class="tool-pill">Interoperability Readiness</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="section">
+  <div class="wrap">
+    <p class="eyebrow">What's Being Built</p>
+    <h2>A working project, not a finished product</h2>
+    <p>This library is being built in public and expands continuously. Tools marked live are available now. Everything else is in development and will be published as it's ready.</p>
+
+    <div class="roadmap">
+      <div class="rm-phase">
+        <div class="rm-label">Live Now</div>
+        <div class="rm-items">
+          <div class="rm-item">
+            <div class="rm-status status-live"></div>
+            <div class="rm-name">IntakeIQ — Operations Readiness Diagnostic</div>
+            <div class="rm-domain">All Domains</div>
+            <a href="intakeiq.html" class="rm-link">Try it →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="rm-phase">
+        <div class="rm-label">Coming Next</div>
+        <div class="rm-items">
+          <div class="rm-item">
+            <div class="rm-status status-next"></div>
+            <div class="rm-name">No-Show Impact Calculator</div>
+            <div class="rm-domain">Scheduling</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-next"></div>
+            <div class="rm-name">DAR Benchmarker</div>
+            <div class="rm-domain">Revenue Cycle</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-next"></div>
+            <div class="rm-name">Auth Denial Rate Scorer</div>
+            <div class="rm-domain">Prior Auth</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-next"></div>
+            <div class="rm-name">Turnover Cost Calculator</div>
+            <div class="rm-domain">Workforce</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rm-phase">
+        <div class="rm-label">Planned</div>
+        <div class="rm-items">
+          <div class="rm-item">
+            <div class="rm-status status-planned"></div>
+            <div class="rm-name">Referral Leakage Estimator</div>
+            <div class="rm-domain">Intake</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-planned"></div>
+            <div class="rm-name">Payer Mix Analyzer</div>
+            <div class="rm-domain">Revenue Cycle</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-planned"></div>
+            <div class="rm-name">Care Coordination Gap Identifier</div>
+            <div class="rm-domain">Care Coordination</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-planned"></div>
+            <div class="rm-name">Interoperability Readiness Assessment</div>
+            <div class="rm-domain">Ops & Data</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-status status-planned"></div>
+            <div class="rm-name">KPI Maturity Scorer</div>
+            <div class="rm-domain">Workforce</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="wrap">
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="cta-strip-title">Start with IntakeIQ</div>
+      <div class="cta-strip-sub">6 questions. 3 minutes. A scored readiness report for your practice.</div>
+    </div>
+    <div style="display:flex;gap:.625rem;flex-wrap:wrap">
+      <a href="intakeiq.html" class="btn btn-white">Try IntakeIQ →</a>
+      <a href="https://coxcontent.com" class="btn btn-outline">More Resources</a>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section">
+  <div class="wrap">
+    <p class="eyebrow">About This Project</p>
+    <h2>Built by someone who's done the work</h2>
+    <p>These tools come from direct experience building and scaling healthcare operations — not theory. The benchmarks, scoring logic, and framework decisions here are drawn from real implementations, including an AI-assisted intake and authorization system that reduced patient wait times by 83% across a multi-state specialty care organization, recognized as a Gartner case study and featured at Appian World 2025.</p>
+    <p>The goal is to make practitioner-level operational knowledge freely available to operators who can use it — without a consulting engagement, a software license, or a conference ticket.</p>
+
+    <div class="about-card">
+      <div class="about-icon">RC</div>
+      <div>
+        <div class="about-name">Ryan Cox</div>
+        <p class="about-bio">Healthcare technology executive and operator. Co-founder of Acclaim Autism, scaled to $10M+ revenue across multiple states. Hult MBA. Deep expertise in healthcare operations, revenue cycle management, workflow automation, and AI-assisted clinical documentation. The tools here represent a working attempt to document and quantify what good operations actually look like in specialty care.</p>
+        <a href="https://coxcontent.com" class="about-link">coxcontent.com →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <div class="wrap">
+    <div class="foot-name">cox<span>content</span>.com</div>
+    <div class="foot-sub">Healthcare Operations Intelligence · Free resources for specialty care operators</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Lifetime Value Calculator · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.explainer{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin:2rem 0}
+.explainer-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:.75rem}
+.explainer-body{font-size:.88rem;color:var(--mid);line-height:1.65}
+.formula{background:var(--teal-bg);border:1px solid #a8d4d4;border-radius:var(--r);padding:1rem 1.25rem;margin:1rem 0;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--teal);text-align:center;line-height:1.5}
+.variable-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
+.variable-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:.875rem}
+.var-name{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
+.var-desc{font-size:.78rem;color:var(--mid);line-height:1.4}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:.375rem}
+.card-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.25rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block;line-height:1.45}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--teal)}
+.has-prefix input{padding-left:2rem}.has-suffix input{padding-right:2.75rem}
+select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;cursor:pointer}
+select:focus{border-color:var(--teal)}
+.live-box{background:var(--teal-bg);border:1px solid #a8d4d4;border-radius:var(--r);padding:1rem 1.25rem;margin-top:1rem;display:flex;align-items:center;justify-content:space-between}
+.live-label{font-size:.82rem;color:var(--teal)}
+.live-val{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--teal)}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.ltv-hero{background:var(--teal);border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.ltv-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.ltv-num{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,8vw,4.5rem);color:white;line-height:1;margin-bottom:.375rem}
+.ltv-sub{font-size:.88rem;color:rgba(255,255,255,.8)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.highlight{background:var(--teal-bg);border-color:#a8d4d4}.b-card.highlight .b-val{color:var(--teal)}
+.math-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.math-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.math-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.625rem 0;border-bottom:1px solid var(--border);gap:1rem}
+.math-row:last-child{border-bottom:none;font-weight:600;padding-top:.875rem}
+.math-label{font-size:.85rem;color:var(--mid);line-height:1.4}
+.math-label small{display:block;font-size:.73rem;color:var(--muted);font-weight:400;margin-top:.1rem}
+.math-val{font-family:'DM Mono',monospace;font-size:.88rem;color:var(--text);white-space:nowrap}
+.math-val.accent{color:var(--teal);font-size:1rem}
+.bench-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.bench-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.1rem}
+.bench-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.75rem}
+.bench-label{font-size:.82rem;color:var(--mid);width:160px;min-width:160px}
+.bench-track{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bench-bar{height:100%;border-radius:4px;transition:width .9s ease}
+.bench-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);width:52px;text-align:right}
+.use-cases{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.use-case{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.use-case:last-child{border-bottom:none;padding-bottom:0}.use-case:first-child{padding-top:0}
+.uc-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.85rem;margin-top:1px}
+.uc-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.uc-body{font-size:.82rem;color:var(--mid);line-height:1.45}
+.uc-example{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:.375rem;line-height:1.4}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.breakdown-grid,.variable-grid{grid-template-columns:1fr}.bench-label{width:110px;min-width:110px}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Intake · Patient LTV Calculator</span>
+</div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>What is a patient <em>actually worth</em> to your practice?</h1>
+    <p class="lead">Patient lifetime value (LTV) is the single most important number most practices have never calculated. It determines what a referral is worth, what a no-show really costs, and whether an appeal is worth filing. This tool walks you through every variable.</p>
+
+    <div class="explainer">
+      <div class="explainer-title">What is Patient LTV — and why does it matter?</div>
+      <div class="explainer-body">
+        Patient LTV is the total net revenue a single patient generates over their entire care relationship with your practice. It's not just one session — it's every session, adjusted for attendance, reimbursement rate, and what you actually collect.
+        <div class="formula">LTV = Sessions/Week × Weeks in Care × Rate/Session × Attendance Rate × Collection Rate</div>
+        Most operators think of a cancelled appointment as a $150 loss. The reality is often 10–100x that, once you account for the full care episode. Knowing your LTV changes how you think about intake investment, referral relationships, no-show policy, and appeal decisions.
+        <div class="variable-grid">
+          <div class="variable-card"><div class="var-name">Sessions/Week</div><div class="var-desc">How often does this patient type come in? ABA: 10–25 hrs/wk. PT: 2–3x. Mental health: 1x.</div></div>
+          <div class="variable-card"><div class="var-name">Weeks in Care</div><div class="var-desc">Average treatment duration. ABA: 2–4 years. PT: 8–16 weeks. Behavioral health: varies.</div></div>
+          <div class="variable-card"><div class="var-name">Rate Per Session</div><div class="var-desc">Blended reimbursement per billable unit across your payer mix.</div></div>
+          <div class="variable-card"><div class="var-name">Collection Rate</div><div class="var-desc">% of billed amounts you actually collect. Industry avg: 85–92%.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="go('s-calc')">Calculate My Patient LTV <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">5 inputs · Defaults by specialty · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">$45K</div><div class="stat-l">Avg ABA patient LTV</div></div>
+      <div><div class="stat-n">$3K</div><div class="stat-l">Avg PT patient LTV</div></div>
+      <div><div class="stat-n">$12K</div><div class="stat-l">Avg behavioral health LTV</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Your Patient Profile</div>
+      <div class="card-sub">Select your specialty to load defaults — then adjust to match your practice.</div>
+      <div class="field">
+        <label class="field-label">Specialty / service type</label>
+        <select id="specialty" onchange="applyDefaults()">
+          <option value="aba">ABA Therapy (autism, behavioral health)</option>
+          <option value="pt">Physical / Occupational / Speech Therapy</option>
+          <option value="behavioral">Outpatient Behavioral Health / Mental Health</option>
+          <option value="neurology">Neurology</option>
+          <option value="pcp">Primary Care (chronic condition management)</option>
+          <option value="oncology">Oncology</option>
+          <option value="custom">Other / Custom</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sessions & Duration</div>
+      <div class="field">
+        <label class="field-label">Sessions per week</label>
+        <span class="field-hint">Average for this patient type. ABA: 10–25. PT/OT/Speech: 2–3. Mental health: 1.</span>
+        <div class="input-wrap has-suffix"><input type="number" id="sessions-week" value="10" min="0.5" step="0.5" oninput="liveCalc()"><span class="suffix">/wk</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Weeks in care (average treatment duration)</label>
+        <span class="field-hint">ABA: 100–200 weeks. PT: 8–16 weeks. Mental health: 26–52 weeks.</span>
+        <div class="input-wrap has-suffix"><input type="number" id="weeks-care" value="130" min="1" oninput="liveCalc()"><span class="suffix">wks</span></div>
+      </div>
+      <div class="live-box"><span class="live-label">Treatment duration</span><span class="live-val" id="duration-label">—</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Revenue Variables</div>
+      <div class="field">
+        <label class="field-label">Average reimbursement per session</label>
+        <span class="field-hint">Use your blended rate across payers. Find this in your RCM reports or EOBs.</span>
+        <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="rate-session" value="150" min="1" oninput="liveCalc()"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Collection rate</label>
+        <span class="field-hint">% of billed amounts you actually collect. Industry average: 88%. Check your RCM dashboard.</span>
+        <div class="input-wrap has-suffix"><input type="number" id="collection-rate" value="88" min="1" max="100" oninput="liveCalc()"><span class="suffix">%</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Attendance rate</label>
+        <span class="field-hint">% of scheduled sessions the patient actually attends. 85% = 15% no-show/cancel rate.</span>
+        <div class="input-wrap has-suffix"><input type="number" id="attendance-rate" value="85" min="1" max="100" oninput="liveCalc()"><span class="suffix">%</span></div>
+      </div>
+      <div class="live-box"><span class="live-label">Estimated Patient LTV</span><span class="live-val" id="live-ltv">—</span></div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results');buildResults()">See Full Breakdown <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Patient Lifetime Value</h2>
+
+    <div class="ltv-hero">
+      <div class="ltv-label">Estimated Patient LTV</div>
+      <div class="ltv-num" id="r-ltv">—</div>
+      <div class="ltv-sub" id="r-ltv-sub">—</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="b-card"><div class="b-val" id="r-total-sessions">—</div><div class="b-label">Total sessions scheduled</div></div>
+      <div class="b-card"><div class="b-val" id="r-attended">—</div><div class="b-label">Sessions actually attended</div></div>
+      <div class="b-card"><div class="b-val" id="r-gross">—</div><div class="b-label">Gross billed revenue</div></div>
+      <div class="b-card highlight"><div class="b-val" id="r-net">—</div><div class="b-label">Net collected (your LTV)</div></div>
+    </div>
+
+    <div class="math-card">
+      <div class="math-title">Step-by-Step Calculation</div>
+      <div class="math-row"><div class="math-label">Sessions per week<small>Your input</small></div><div class="math-val" id="m-spw">—</div></div>
+      <div class="math-row"><div class="math-label">× Weeks in care<small>Treatment duration</small></div><div class="math-val" id="m-weeks">—</div></div>
+      <div class="math-row"><div class="math-label">= Total sessions scheduled<small>Before attendance adjustment</small></div><div class="math-val" id="m-total">—</div></div>
+      <div class="math-row"><div class="math-label">× Attendance rate<small>% of sessions patient shows up</small></div><div class="math-val" id="m-attend">—</div></div>
+      <div class="math-row"><div class="math-label">× Rate per session<small>Blended reimbursement</small></div><div class="math-val" id="m-rate">—</div></div>
+      <div class="math-row"><div class="math-label">× Collection rate<small>% of billed you actually collect</small></div><div class="math-val" id="m-collect">—</div></div>
+      <div class="math-row"><div class="math-label">= Patient Lifetime Value</div><div class="math-val accent" id="m-ltv">—</div></div>
+    </div>
+
+    <div class="bench-card">
+      <div class="bench-title">How Your LTV Compares by Specialty</div>
+      <div id="r-bench"></div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:.875rem;font-family:'DM Mono',monospace">Benchmarks represent typical ranges. Actual LTV varies by payer mix, geography, and acuity.</div>
+    </div>
+
+    <div class="use-cases">
+      <div class="card-title" style="margin-bottom:1rem">What To Do With This Number</div>
+      <div id="r-use-cases"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Use this LTV across the tool suite</div>
+      <p class="cta-body">Patient LTV is the foundation for referral leakage cost, backfill revenue recovery, and appeal ROI. Plug this number into the other calculators for more accurate results.</p>
+      <div class="cta-btns">
+        <a href="referral-leakage.html" class="btn btn-primary">Referral Leakage →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const DEFAULTS={aba:{sessions:15,weeks:130,rate:150,collection:88,attendance:85},pt:{sessions:2.5,weeks:12,rate:175,collection:90,attendance:88},behavioral:{sessions:1,weeks:40,rate:160,collection:85,attendance:82},neurology:{sessions:0.5,weeks:52,rate:220,collection:87,attendance:90},pcp:{sessions:1,weeks:104,rate:140,collection:92,attendance:88},oncology:{sessions:3,weeks:26,rate:280,collection:89,attendance:92},custom:{sessions:2,weeks:26,rate:150,collection:88,attendance:85}};
+const BENCHMARKS=[{label:'ABA Therapy',ltv:45000,color:'var(--teal)'},{label:'Primary Care (chronic)',ltv:18000,color:'var(--red)'},{label:'Behavioral Health',ltv:12000,color:'var(--purple)'},{label:'Neurology',ltv:8500,color:'var(--amber)'},{label:'Physical Therapy',ltv:3200,color:'var(--green)'}];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+Math.round(n)}
+
+function applyDefaults(){
+  const d=DEFAULTS[document.getElementById('specialty').value];
+  document.getElementById('sessions-week').value=d.sessions;
+  document.getElementById('weeks-care').value=d.weeks;
+  document.getElementById('rate-session').value=d.rate;
+  document.getElementById('collection-rate').value=d.collection;
+  document.getElementById('attendance-rate').value=d.attendance;
+  liveCalc();
+}
+
+function getInputs(){return{sessions:parseFloat(document.getElementById('sessions-week').value)||2,weeks:parseInt(document.getElementById('weeks-care').value)||26,rate:parseFloat(document.getElementById('rate-session').value)||150,collection:parseFloat(document.getElementById('collection-rate').value)||88,attendance:parseFloat(document.getElementById('attendance-rate').value)||85}}
+
+function calcLTV(i){const total=Math.round(i.sessions*i.weeks);const attended=Math.round(total*(i.attendance/100));const gross=Math.round(attended*i.rate);const net=Math.round(gross*(i.collection/100));return{total,attended,gross,net}}
+
+function liveCalc(){
+  const i=getInputs();const r=calcLTV(i);
+  document.getElementById('live-ltv').textContent=fmt(r.net);
+  const months=Math.round(i.weeks/4.3);const years=(i.weeks/52).toFixed(1);
+  document.getElementById('duration-label').textContent=i.weeks+' wks ('+(months>=24?years+' yrs':months+' mo')+')';
+}
+
+function buildResults(){
+  const i=getInputs();const r=calcLTV(i);
+  const spec=document.getElementById('specialty').selectedOptions[0].text;
+  document.getElementById('r-ltv').textContent=fmt(r.net);
+  document.getElementById('r-ltv-sub').textContent=spec+' · '+i.sessions+' sessions/wk · '+i.weeks+' weeks · $'+i.rate+'/session';
+  document.getElementById('r-total-sessions').textContent=r.total.toLocaleString();
+  document.getElementById('r-attended').textContent=r.attended.toLocaleString();
+  document.getElementById('r-gross').textContent=fmt(r.gross);
+  document.getElementById('r-net').textContent=fmt(r.net);
+  document.getElementById('m-spw').textContent=i.sessions+'/wk';
+  document.getElementById('m-weeks').textContent=i.weeks+' weeks';
+  document.getElementById('m-total').textContent=r.total.toLocaleString()+' sessions';
+  document.getElementById('m-attend').textContent=i.attendance+'%';
+  document.getElementById('m-rate').textContent='$'+i.rate;
+  document.getElementById('m-collect').textContent=i.collection+'%';
+  document.getElementById('m-ltv').textContent=fmt(r.net);
+
+  const maxBench=Math.max(r.net,...BENCHMARKS.map(b=>b.ltv));
+  document.getElementById('r-bench').innerHTML=BENCHMARKS.map(b=>`
+    <div class="bench-row"><div class="bench-label">${b.label}</div><div class="bench-track"><div class="bench-bar" style="background:${b.color}" data-target="${Math.round(b.ltv/maxBench*100)}"></div></div><div class="bench-val">${fmt(b.ltv)}</div></div>`).join('')+`
+    <div class="bench-row"><div class="bench-label" style="font-weight:500;color:var(--text)">Your patients</div><div class="bench-track"><div class="bench-bar" style="background:var(--teal);outline:2px solid var(--teal);outline-offset:1px" data-target="${Math.round(r.net/maxBench*100)}"></div></div><div class="bench-val" style="color:var(--teal);font-weight:500">${fmt(r.net)}</div></div>`;
+  setTimeout(()=>document.querySelectorAll('.bench-bar[data-target]').forEach(b=>b.style.width=b.dataset.target+'%'),150);
+
+  document.getElementById('r-use-cases').innerHTML=[
+    {icon:'📋',bg:'var(--teal-bg)',title:'Referral source investment',body:'Each patient referred is worth '+fmt(r.net)+'. A referring physician sending 10 patients/year represents '+fmt(r.net*10)+' in annual revenue. Use this to justify relationship-building investment.',example:'Referral lunch ($500) × 5 patients sent = '+Math.round((r.net*5)/500)+'x ROI'},
+    {icon:'📅',bg:'var(--amber-bg)',title:'True cost of a no-show',body:'A no-show isn\'t just one missed session — it\'s a risk to the full care relationship. If a patient disengages after repeated no-shows, the full LTV of '+fmt(r.net)+' is at risk.',example:'Per-session value: $'+Math.round(r.net/r.attended)+' · Full LTV at risk: '+fmt(r.net)},
+    {icon:'⚖️',bg:'var(--green-bg)',title:'Appeal threshold decisions',body:'When deciding whether to appeal a denial, the patient\'s full LTV provides important context. A denial early in a '+i.weeks+'-week episode is worth fighting harder than one near discharge.',example:'Use '+fmt(r.net)+' as your LTV input in the Appeal ROI Calculator'},
+    {icon:'💼',bg:'var(--purple-bg)',title:'Intake investment justification',body:'If an improved intake process captures 10 more patients per year, the revenue impact is '+fmt(r.net*10)+'. This is the ROI argument for intake automation investment.',example:'10 additional patients × '+fmt(r.net)+' LTV = '+fmt(r.net*10)+'/yr'}
+  ].map(u=>`<div class="use-case"><div class="uc-icon" style="background:${u.bg}">${u.icon}</div><div><div class="uc-title">${u.title}</div><div class="uc-body">${u.body}</div><div class="uc-example">${u.example}</div></div></div>`).join('');
+
+  window._aiContext = {tool:'PatientLTVCalculator',specialty:spec,sessionsPerWeek:i.sessions,weeksInCare:i.weeks,ratePerSession:i.rate,collectionRate:i.collection,attendanceRate:i.attendance,totalSessions:r.total,patientLTV:r.net,grossBilled:r.gross};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+applyDefaults();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

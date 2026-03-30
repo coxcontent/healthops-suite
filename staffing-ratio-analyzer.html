@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staffing Ratio Analyzer · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--teal);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--teal)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--teal)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--teal)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:.375rem}
+.card-sub{font-size:.84rem;color:var(--mid);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.375rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--teal)}
+select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;cursor:pointer}
+select:focus{border-color:var(--teal)}
+.ratio-grid{display:flex;flex-direction:column;gap:.75rem}
+.ratio-row{background:var(--bg);border-radius:var(--r);padding:1rem;display:grid;grid-template-columns:1fr 80px 80px;gap:.625rem;align-items:center}
+.ratio-head{display:grid;grid-template-columns:1fr 80px 80px;gap:.625rem;margin-bottom:.375rem}
+.rh-label{font-size:.72rem;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;text-align:center}
+.rh-label:first-child{text-align:left}
+.role-name{font-size:.88rem;font-weight:500;color:var(--text)}
+.mini-input{padding:.45rem .5rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--text);background:var(--surface);outline:none;text-align:center;width:100%;-moz-appearance:textfield}
+.mini-input::-webkit-outer-spin-button,.mini-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.mini-input:focus{border-color:var(--teal)}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.ratio-results{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rr-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.rr-row{display:grid;grid-template-columns:1fr 70px 70px 80px;gap:.5rem;align-items:center;padding:.625rem 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.rr-row:last-child{border-bottom:none}
+.rr-head{display:grid;grid-template-columns:1fr 70px 70px 80px;gap:.5rem;margin-bottom:.375rem}
+.rr-head-label{font-size:.68rem;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;text-align:center}
+.rr-head-label:first-child{text-align:left}
+.rr-role{color:var(--text);font-weight:500}
+.rr-actual{font-family:'DM Mono',monospace;color:var(--mid);text-align:center}
+.rr-benchmark{font-family:'DM Mono',monospace;color:var(--muted);text-align:center}
+.rr-status{text-align:center}
+.status-badge{font-family:'DM Mono',monospace;font-size:.68rem;padding:.18rem .45rem;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
+.status-ok{background:var(--teal-bg);color:var(--teal)}
+.status-over{background:var(--green-bg);color:var(--green)}
+.status-under{background:var(--red-bg);color:var(--red)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.rec-item{display:flex;gap:.875rem;padding:.875rem 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none;padding-bottom:0}.rec-item:first-child{padding-top:0}
+.rec-icon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;margin-top:1px}
+.rec-title{font-size:.9rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45}
+.rec-impact{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--teal);margin-top:.375rem}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--teal)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.ratio-row,.ratio-head,.rr-row,.rr-head,.summary-grid{grid-template-columns:1fr}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:#6c5ce7;padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:#6c5ce7;text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:#6c5ce7}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Decide · Staffing Ratio</span>
+</div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Are you <em>over- or under-staffed</em> for your patient volume?</h1>
+    <p class="lead">Staffing ratio analysis tells you whether your clinical and administrative staff count is appropriate for your patient volume — by role. Most practices are imbalanced: over-staffed in one area, critically thin in another.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Analyze My Staffing <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">Enter your headcount · ~2 minutes · No signup</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">1:5</div><div class="stat-l">Clinical supervisor ratio benchmark</div></div>
+      <div><div class="stat-n">1:8</div><div class="stat-l">Billing staff to provider ratio</div></div>
+      <div><div class="stat-n">30%</div><div class="stat-l">Avg labor cost as % of revenue</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">Practice Context</div>
+      <div class="card-sub">Start with your overall volume — we'll use this to benchmark each role.</div>
+      <div class="field">
+        <label class="field-label">Primary specialty</label>
+        <select id="specialty" onchange="prefillBenchmarks()">
+          <option value="behavioral">Behavioral Health / ABA</option>
+          <option value="rehab">Rehab (PT, OT, Speech)</option>
+          <option value="pcp">Primary Care</option>
+          <option value="specialty">Other specialty care</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Active patients currently enrolled</label>
+        <input type="number" id="active-patients" value="100" min="1" oninput="liveCalc()">
+      </div>
+      <div class="field">
+        <label class="field-label">Weekly sessions delivered</label>
+        <input type="number" id="weekly-sessions" value="300" min="1" oninput="liveCalc()">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Your Current Headcount</div>
+      <div class="card-sub">Enter FTE count for each role. Use 0.5 for part-time positions.</div>
+
+      <div class="ratio-head">
+        <div class="rh-label">Role</div>
+        <div class="rh-label">Your FTE</div>
+        <div class="rh-label">Avg salary</div>
+      </div>
+
+      <div class="ratio-grid">
+        <div class="ratio-row"><div class="role-name">Clinical providers / therapists</div><input type="number" class="mini-input" id="r-clinical" value="8" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-clinical" value="65000" min="0"></div>
+        <div class="ratio-row"><div class="role-name">Clinical supervisors / leads</div><input type="number" class="mini-input" id="r-supervisor" value="1" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-supervisor" value="85000" min="0"></div>
+        <div class="ratio-row"><div class="role-name">Intake / patient access</div><input type="number" class="mini-input" id="r-intake" value="1" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-intake" value="42000" min="0"></div>
+        <div class="ratio-row"><div class="role-name">Billing / RCM staff</div><input type="number" class="mini-input" id="r-billing" value="1" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-billing" value="45000" min="0"></div>
+        <div class="ratio-row"><div class="role-name">Scheduling / admin support</div><input type="number" class="mini-input" id="r-admin" value="1" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-admin" value="38000" min="0"></div>
+        <div class="ratio-row"><div class="role-name">Operations / management</div><input type="number" class="mini-input" id="r-ops" value="1" min="0" step="0.5" oninput="liveCalc()"><input type="number" class="mini-input" id="s-ops" value="90000" min="0"></div>
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results');buildResults()">See Analysis <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Staffing Ratio Analysis</h2>
+
+    <div class="ratio-results">
+      <div class="rr-title">Staffing Ratio by Role</div>
+      <div class="rr-head">
+        <div class="rr-head-label">Role</div>
+        <div class="rr-head-label">Your ratio</div>
+        <div class="rr-head-label">Benchmark</div>
+        <div class="rr-head-label">Status</div>
+      </div>
+      <div id="r-ratio-rows"></div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="b-card"><div class="b-val" id="r-total-fte">—</div><div class="b-label">Total FTE headcount</div></div>
+      <div class="b-card"><div class="b-val" id="r-total-labor">—</div><div class="b-label">Estimated annual labor cost</div></div>
+      <div class="b-card" id="r-gaps-card"><div class="b-val" id="r-gaps">—</div><div class="b-label">Roles below benchmark</div></div>
+      <div class="b-card" id="r-over-card"><div class="b-val" id="r-over">—</div><div class="b-label">Roles above benchmark</div></div>
+    </div>
+
+    <div class="recs">
+      <div class="rr-title" style="margin-bottom:1rem">Priority Actions</div>
+      <div id="r-recs"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">See your full operations picture</div>
+      <p class="cta-body">Staffing ratios are one dimension of workforce health. IntakeIQ scores all five operational domains in 3 minutes.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-primary">Try IntakeIQ →</a>
+        <a href="turnover-calculator.html" class="btn btn-ghost">Turnover Cost Calculator</a>
+      </div>
+    </div>
+
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+// Benchmarks: patients per FTE for each role by specialty
+const BENCHMARKS={
+  behavioral:{clinical:{pPer:12,label:'patients/therapist'},supervisor:{pPer:60,label:'patients/supervisor'},intake:{pPer:80,label:'patients/intake FTE'},billing:{pPer:100,label:'patients/billing FTE'},admin:{pPer:120,label:'patients/admin FTE'},ops:{pPer:150,label:'patients/ops FTE'}},
+  rehab:{clinical:{pPer:20,label:'patients/provider'},supervisor:{pPer:80,label:'patients/supervisor'},intake:{pPer:100,label:'patients/intake FTE'},billing:{pPer:120,label:'patients/billing FTE'},admin:{pPer:150,label:'patients/admin FTE'},ops:{pPer:200,label:'patients/ops FTE'}},
+  pcp:{clinical:{pPer:250,label:'patients/provider (panel)'},supervisor:{pPer:500,label:'patients/supervisor'},intake:{pPer:200,label:'patients/intake FTE'},billing:{pPer:300,label:'patients/billing FTE'},admin:{pPer:250,label:'patients/admin FTE'},ops:{pPer:400,label:'patients/ops FTE'}},
+  specialty:{clinical:{pPer:50,label:'patients/provider'},supervisor:{pPer:100,label:'patients/supervisor'},intake:{pPer:120,label:'patients/intake FTE'},billing:{pPer:150,label:'patients/billing FTE'},admin:{pPer:180,label:'patients/admin FTE'},ops:{pPer:200,label:'patients/ops FTE'}}
+};
+
+const ROLES=[
+  {id:'clinical',name:'Clinical providers'},
+  {id:'supervisor',name:'Clinical supervisors'},
+  {id:'intake',name:'Intake / patient access'},
+  {id:'billing',name:'Billing / RCM'},
+  {id:'admin',name:'Scheduling / admin'},
+  {id:'ops',name:'Operations / management'}
+];
+
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+n}
+function prefillBenchmarks(){}
+function liveCalc(){}
+
+function buildResults(){
+  const specialty=document.getElementById('specialty').value;
+  const patients=parseInt(document.getElementById('active-patients').value)||100;
+  const b=BENCHMARKS[specialty];
+  let totalFTE=0,totalLabor=0,gaps=0,over=0;
+
+  const rows=ROLES.map(r=>{
+    const fte=parseFloat(document.getElementById('r-'+r.id).value)||0;
+    const salary=parseFloat(document.getElementById('s-'+r.id).value)||50000;
+    totalFTE+=fte;totalLabor+=fte*salary;
+    const benchmark=b[r.id];
+    const actualRatio=fte>0?Math.round(patients/fte):999;
+    const benchmarkRatio=benchmark.pPer;
+    const diff=((benchmarkRatio-actualRatio)/benchmarkRatio)*100;
+    let status,statusClass;
+    if(Math.abs(diff)<20){status='✓ On target';statusClass='status-ok'}
+    else if(diff<-20){status='↑ Overstaffed';statusClass='status-over';over++}
+    else{status='⚠ Understaffed';statusClass='status-under';gaps++}
+    return{...r,fte,actualRatio,benchmarkRatio,status,statusClass,diff,benchmark};
+  });
+
+  document.getElementById('r-ratio-rows').innerHTML=rows.map(r=>`
+    <div class="rr-row">
+      <div class="rr-role">${r.name}</div>
+      <div class="rr-actual">${r.fte>0?r.actualRatio+':1':'—'}</div>
+      <div class="rr-benchmark">${r.benchmarkRatio}:1</div>
+      <div class="rr-status"><span class="status-badge ${r.statusClass}">${r.status}</span></div>
+    </div>`).join('');
+
+  document.getElementById('r-total-fte').textContent=totalFTE.toFixed(1)+' FTE';
+  document.getElementById('r-total-labor').textContent=fmt(totalLabor)+'/yr';
+  document.getElementById('r-gaps').textContent=gaps+' roles';
+  document.getElementById('r-gaps-card').className='b-card '+(gaps===0?'good':gaps<=2?'warn':'bad');
+  document.getElementById('r-over').textContent=over+' roles';
+  document.getElementById('r-over-card').className='b-card '+(over===0?'good':'warn');
+
+  const understaffed=rows.filter(r=>r.statusClass==='status-under');
+  const overstaffed=rows.filter(r=>r.statusClass==='status-over');
+
+  const recs=[];
+  if(understaffed.length>0)recs.push({icon:'⚠️',title:'Priority hires: '+understaffed.map(r=>r.name).join(', '),desc:'These roles are below benchmark for your patient volume. Understaffing creates bottlenecks that limit growth and increase burnout risk for existing staff.',impact:'Each understaffed role creates a capacity constraint for 15–25 additional patients',bg:'var(--red-bg)'});
+  if(overstaffed.length>0)recs.push({icon:'↑',title:'Review: '+overstaffed.map(r=>r.name).join(', ')+' appear overstaffed',desc:'These roles exceed benchmark ratios for your current volume. This may reflect a growth runway — or an opportunity to redeploy capacity.',impact:'Right-sizing creates budget for priority hires without increasing total labor cost',bg:'var(--amber-bg)'});
+  recs.push({icon:'📊',title:'Track ratios quarterly as you scale',desc:'Staffing ratios shift with patient volume. A practice at 100 patients has different needs than the same practice at 200. Build a quarterly headcount review into your operations rhythm.',impact:'Proactive ratio management prevents the costly over-hiring and under-hiring cycles',bg:'var(--teal-bg)'});
+
+  document.getElementById('r-recs').innerHTML=recs.map(r=>`
+    <div class="rec-item">
+      <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+      <div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div><div class="rec-impact">${r.impact}</div></div>
+    </div>`).join('');
+
+  window._aiContext = {tool:'StaffingRatioAnalyzer',specialty:specialty,activePatients:patients,totalFTE:totalFTE,totalAnnualLaborCost:totalLabor,rolesUnderstaffed:gaps,rolesOverstaffed:over,understaffedRoles:understaffed.map(r=>r.name),overstaffedRoles:overstaffed.map(r=>r.name)};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>

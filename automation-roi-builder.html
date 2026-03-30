@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme:light only">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automation ROI Builder · coxcontent.com</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--surface:#fff;--border:#e0ddd5;--text:#1c1c1a;--mid:#555550;--muted:#999990;--teal:#0d7070;--teal-bg:#eaf4f4;--amber:#b87020;--amber-bg:#fdf3e3;--green:#1a7a45;--green-bg:#eaf5ee;--red:#c0392b;--red-bg:#fdecea;--purple:#6655aa;--purple-bg:#f0eefa;--r:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-box{width:26px;height:26px;background:var(--purple);border-radius:3px;display:grid;place-items:center}
+.logo-box svg{width:13px;height:13px;fill:white}
+.logo-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.logo-name span{color:var(--purple)}
+.nav-tag{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:640px;margin:0 auto;padding:0 1.25rem}
+.screen{display:none}.screen.active{display:block}
+.land{padding:3.5rem 0 4rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.875rem}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.12;margin-bottom:1rem;color:var(--text)}
+h1 em{font-style:italic;color:var(--purple)}
+.lead{font-size:1rem;color:var(--mid);margin-bottom:2rem;max-width:480px;line-height:1.65}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--purple);color:white}.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--border)}.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-teal{background:var(--teal);color:white}.btn-teal:hover{opacity:.9}
+.land-meta{margin-top:1rem;font-size:.78rem;color:var(--muted);font-family:'DM Mono',monospace}
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+.stats{display:flex;gap:2rem;flex-wrap:wrap}
+.stat-n{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--purple)}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.calc{padding:2rem 0 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:.375rem}
+.card-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.25rem}
+.field{margin-bottom:1.25rem}.field:last-child{margin-bottom:0}
+.field-label{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.25rem;display:block}
+.field-hint{font-size:.78rem;color:var(--muted);margin-bottom:.5rem;display:block}
+.input-wrap{position:relative}
+.prefix{position:absolute;left:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+.suffix{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--muted);pointer-events:none}
+input[type=number]{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]:focus{border-color:var(--purple)}
+.has-prefix input{padding-left:2rem}.has-suffix input{padding-right:2.75rem}
+select{width:100%;padding:.7rem 1rem;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--surface);outline:none;cursor:pointer}
+select:focus{border-color:var(--purple)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+.calc-btn-row{display:flex;gap:.625rem;margin-top:1.5rem}
+.live-box{background:var(--purple-bg);border:1px solid #c4b8e8;border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+.live-label{font-size:.82rem;color:var(--purple)}
+.live-val{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--purple)}
+.results{padding:2rem 0 4rem}
+.res-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem}
+h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,4vw,1.9rem);color:var(--text);margin-bottom:1.75rem}
+.hero{border-radius:var(--r);padding:2rem;margin-bottom:1.25rem;text-align:center}
+.hero-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+.hero-num{font-family:'DM Serif Display',serif;font-size:clamp(2.2rem,6vw,3.5rem);color:white;line-height:1;margin-bottom:.375rem}
+.hero-sub{font-size:.88rem;color:rgba(255,255,255,.82)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.b-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.b-val{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text);margin-bottom:.2rem}
+.b-label{font-size:.8rem;color:var(--muted);line-height:1.3}
+.b-card.good{background:var(--green-bg);border-color:#a8d4b8}.b-card.good .b-val{color:var(--green)}
+.b-card.warn{background:var(--amber-bg);border-color:#e8c080}.b-card.warn .b-val{color:var(--amber)}
+.b-card.bad{background:var(--red-bg);border-color:#e8a8a0}.b-card.bad .b-val{color:var(--red)}
+.breakdown{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.breakdown-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1rem}
+.bd-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.bd-row:last-child{border-bottom:none;font-weight:600;padding-top:.75rem}
+.bd-label{color:var(--mid)}.bd-val{font-family:'DM Mono',monospace;color:var(--text)}
+.bd-val.g{color:var(--green)}.bd-val.r{color:var(--red)}
+.timeline{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.tl-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text);margin-bottom:1.1rem}
+.tl-row{display:flex;align-items:center;gap:.875rem;margin-bottom:.75rem}
+.tl-label{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);width:48px;min-width:48px;text-transform:uppercase}
+.tl-track{flex:1;height:22px;background:var(--bg);border-radius:3px;overflow:hidden}
+.tl-bar{height:100%;border-radius:3px;display:flex;align-items:center;padding:0 .5rem;transition:width .9s ease}
+.tl-bar span{font-size:.7rem;color:white;font-weight:500;white-space:nowrap}
+.tl-val{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--mid);width:52px;text-align:right}
+.cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.cta-title{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.cta-body{font-size:.9rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem}
+.cta-btns{display:flex;gap:.625rem;flex-wrap:wrap}
+.foot{text-align:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.foot-name{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--muted)}
+.foot-name span{color:var(--purple)}
+.foot-sub{font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem}
+@media(max-width:500px){.grid-2,.two-col{grid-template-columns:1fr}}
+/* AI RECS */
+.ai-recs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.ai-recs-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1.1rem}
+.ai-badge{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:white;background:var(--purple);padding:.2rem .55rem;border-radius:2px}
+.ai-recs-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text)}
+.ai-rec-item{padding:.875rem 0;border-bottom:1px solid var(--border)}
+.ai-rec-item:last-child{border-bottom:none;padding-bottom:0}
+.ai-rec-item:first-child{padding-top:0}
+.ai-rec-title{font-size:.88rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
+.ai-rec-desc{font-size:.82rem;color:var(--mid);line-height:1.45;margin-bottom:.35rem}
+.ai-rec-impact{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--purple);text-transform:uppercase;letter-spacing:.04em}
+.ai-loading{text-align:center;padding:1.5rem;color:var(--muted);font-size:.88rem;font-family:'DM Mono',monospace}
+.ai-error{padding:.875rem;background:var(--red-bg);border-radius:4px;color:var(--red);font-size:.82rem;margin-bottom:.75rem}
+.ai-key-wrap{display:flex;flex-direction:column;gap:.5rem}
+.ai-key-input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:.82rem;background:var(--bg);color:var(--text)}
+.ai-key-input:focus{outline:none;border-color:var(--purple)}
+.ai-key-note{font-size:.75rem;color:var(--muted);font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="methodology.html" class="logo">
+    <div class="logo-box"><svg viewBox="0 0 13 13"><rect x="1" y="1" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="1" width="4.5" height="4.5" rx=".4"/><rect x="1" y="7.5" width="4.5" height="4.5" rx=".4"/><rect x="7.5" y="9.5" width="4.5" height="1.4" rx=".4"/><rect x="9.3" y="7.5" width="1.4" height="4.5" rx=".4"/></svg></div>
+    <span class="logo-name">cox<span>content</span></span>
+  </a>
+  <span class="nav-tag">Decide · Automation ROI Builder</span>
+</div>
+
+<div id="s-land" class="screen active">
+  <div class="wrap"><div class="land">
+    <p class="eyebrow">Free Tool · coxcontent.com</p>
+    <h1>Build the business case for <em>workflow automation</em></h1>
+    <p class="lead">Every practice knows automation could help. Few can quantify it. This tool builds a defensible ROI case across staff time savings, revenue recovery, and error reduction — in under 2 minutes.</p>
+    <button class="btn btn-primary" onclick="go('s-calc')">Build My ROI Case <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="land-meta">8 inputs · ~2 minutes · Defaults by workflow type</p>
+    <hr>
+    <div class="stats">
+      <div><div class="stat-n">83%</div><div class="stat-l">Wait time reduction (documented)</div></div>
+      <div><div class="stat-n">3x</div><div class="stat-l">Typical first-year ROI</div></div>
+      <div><div class="stat-n">12mo</div><div class="stat-l">Avg payback period</div></div>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-calc" class="screen">
+  <div class="wrap"><div class="calc">
+    <div class="card">
+      <div class="card-title">The Investment</div>
+      <div class="card-sub">Defaults load by workflow type — adjust to your actual quotes.</div>
+      <div class="field">
+        <label class="field-label">Workflow being automated</label>
+        <select id="auto-type" onchange="applyDefaults()">
+          <option value="intake">Intake & patient onboarding</option>
+          <option value="auth">Prior authorization</option>
+          <option value="scheduling">Scheduling & backfill</option>
+          <option value="billing">Billing & claims submission</option>
+          <option value="documentation">Clinical documentation / AI notes</option>
+          <option value="full">Full platform (multiple workflows)</option>
+        </select>
+      </div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label">Implementation cost (one-time)</label>
+          <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="impl-cost" value="35000" min="0" oninput="liveCalc()"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Annual license / subscription</label>
+          <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="annual-cost" value="18000" min="0" oninput="liveCalc()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Staff Time Savings</div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label">Hours saved per week</label>
+          <span class="field-hint">Manual work eliminated</span>
+          <div class="input-wrap has-suffix"><input type="number" id="hrs-saved" value="15" min="0" oninput="liveCalc()"><span class="suffix">hrs</span></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Staff hourly cost</label>
+          <span class="field-hint">Wage + benefits</span>
+          <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="staff-cost" value="28" min="10" oninput="liveCalc()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Revenue Impact</div>
+      <div class="card-sub">What does this automation recover or enable?</div>
+      <div class="two-col">
+        <div class="field">
+          <label class="field-label">Additional patients/month</label>
+          <span class="field-hint">Fewer referrals lost to delays</span>
+          <input type="number" id="add-patients" value="3" min="0" oninput="liveCalc()">
+        </div>
+        <div class="field">
+          <label class="field-label">Avg patient LTV</label>
+          <span class="field-hint">Use LTV Calculator</span>
+          <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="patient-ltv" value="8000" min="0" oninput="liveCalc()"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Denial rate reduction</label>
+          <span class="field-hint">Percentage points</span>
+          <div class="input-wrap has-suffix"><input type="number" id="denial-red" value="5" min="0" max="30" oninput="liveCalc()"><span class="suffix">pts</span></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Monthly claims affected</label>
+          <input type="number" id="claims" value="300" min="0" oninput="liveCalc()">
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label class="field-label">Average claim value</label>
+          <div class="input-wrap has-prefix"><span class="prefix">$</span><input type="number" id="avg-claim" value="500" min="0" oninput="liveCalc()"></div>
+        </div>
+      </div>
+      <div class="live-box">
+        <span class="live-label">Estimated annual benefit</span>
+        <span class="live-val" id="live-benefit">—</span>
+      </div>
+    </div>
+
+    <div class="calc-btn-row">
+      <button class="btn btn-ghost" onclick="go('s-land')">← Back</button>
+      <button class="btn btn-primary" onclick="go('s-results');buildResults()">Build Full ROI Case <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M8.5 4l3.5 3.5-3.5 3.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div></div>
+</div>
+
+<div id="s-results" class="screen">
+  <div class="wrap"><div class="results">
+    <p class="res-eyebrow">Your Results</p>
+    <h2>Automation ROI Analysis</h2>
+
+    <div class="hero" id="r-hero">
+      <div class="hero-label">3-Year Net ROI</div>
+      <div class="hero-num" id="r-roi">—</div>
+      <div class="hero-sub" id="r-roi-sub">—</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="b-card"><div class="b-val" id="r-annual-benefit">—</div><div class="b-label">Annual benefit</div></div>
+      <div class="b-card"><div class="b-val" id="r-yr1-cost">—</div><div class="b-label">Year 1 total cost</div></div>
+      <div class="b-card" id="r-payback-card"><div class="b-val" id="r-payback">—</div><div class="b-label">Payback period</div></div>
+      <div class="b-card good"><div class="b-val" id="r-3yr">—</div><div class="b-label">3-year net benefit</div></div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-title">Annual Benefit Breakdown</div>
+      <div class="bd-row"><div class="bd-label">Staff time savings</div><div class="bd-val g" id="bd-staff">—</div></div>
+      <div class="bd-row"><div class="bd-label">Revenue from additional patients</div><div class="bd-val g" id="bd-patients">—</div></div>
+      <div class="bd-row"><div class="bd-label">Revenue recovered from denial reduction</div><div class="bd-val g" id="bd-denials">—</div></div>
+      <div class="bd-row"><div class="bd-label">Total annual benefit</div><div class="bd-val" id="bd-total">—</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-title">3-Year Value Timeline</div>
+      <div id="r-timeline"></div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Not sure which workflow to automate first?</div>
+      <p class="cta-body">IntakeIQ scores your operations across five domains and identifies your highest-leverage automation opportunities.</p>
+      <div class="cta-btns">
+        <a href="intakeiq-v3.html" class="btn btn-teal">Run IntakeIQ →</a>
+        <a href="methodology.html" class="btn btn-ghost">View All Tools</a>
+      </div>
+    </div>
+    <div class="ai-recs">
+      <div class="ai-recs-header">
+        <span class="ai-badge">AI</span>
+        <span class="ai-recs-title">Recommendations</span>
+      </div>
+      <div id="ai-recs-body"></div>
+    </div>
+
+    <div class="foot"><div class="foot-name">cox<span>content</span>.com</div><div class="foot-sub">Free resources for specialty care operators</div></div>
+  </div></div>
+</div>
+
+<script>
+const D={intake:{impl:25000,annual:12000,hrs:12,patients:4,denial:3,claims:200,claim:300},auth:{impl:30000,annual:15000,hrs:18,patients:2,denial:8,claims:300,claim:600},scheduling:{impl:15000,annual:8000,hrs:10,patients:5,denial:1,claims:100,claim:200},billing:{impl:40000,annual:20000,hrs:20,patients:1,denial:6,claims:500,claim:450},documentation:{impl:35000,annual:18000,hrs:25,patients:3,denial:2,claims:400,claim:350},full:{impl:75000,annual:35000,hrs:40,patients:8,denial:10,claims:600,claim:450}};
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function fmt(n){if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';if(n>=1000)return'$'+Math.round(n/1000)+'K';return'$'+Math.round(n)}
+function applyDefaults(){const d=D[document.getElementById('auto-type').value];document.getElementById('impl-cost').value=d.impl;document.getElementById('annual-cost').value=d.annual;document.getElementById('hrs-saved').value=d.hrs;document.getElementById('add-patients').value=d.patients;document.getElementById('denial-red').value=d.denial;document.getElementById('claims').value=d.claims;document.getElementById('avg-claim').value=d.claim;liveCalc()}
+function gi(id){return parseFloat(document.getElementById(id).value)||0}
+function calc(){const staff=Math.round(gi('hrs-saved')*gi('staff-cost')*52);const patients=Math.round(gi('add-patients')*gi('patient-ltv')*12);const denials=Math.round(gi('claims')*(gi('denial-red')/100)*gi('avg-claim')*0.65*12);const benefit=staff+patients+denials;const yr1=gi('impl-cost')+gi('annual-cost');const pb=benefit>0?Math.round((yr1/benefit)*12):999;const net3=(benefit*3)-(gi('impl-cost')+gi('annual-cost')*3);return{staff,patients,denials,benefit,yr1,pb,net3}}
+function liveCalc(){const r=calc();document.getElementById('live-benefit').textContent=fmt(r.benefit)}
+function buildResults(){
+  const r=calc();
+  const roi=Math.round((r.net3/(gi('impl-cost')+gi('annual-cost')*3))*100);
+  const pb=r.pb>=999?'No payback':r.pb<=12?r.pb+' months':(r.pb/12).toFixed(1)+' years';
+  const hero=document.getElementById('r-hero');
+  hero.style.background=roi>=200?'var(--green)':roi>=100?'var(--teal)':roi>=0?'var(--amber)':'var(--red)';
+  document.getElementById('r-roi').textContent=(roi>=0?'+':'')+roi+'% ROI';
+  document.getElementById('r-roi-sub').textContent='Payback: '+pb+' · 3-year net: '+fmt(r.net3);
+  document.getElementById('r-annual-benefit').textContent=fmt(r.benefit);
+  document.getElementById('r-yr1-cost').textContent=fmt(r.yr1);
+  document.getElementById('r-payback').textContent=pb;
+  document.getElementById('r-payback-card').className='b-card '+(r.pb<=12?'good':r.pb<=24?'warn':'bad');
+  document.getElementById('r-3yr').textContent=fmt(r.net3);
+  document.getElementById('bd-staff').textContent=fmt(r.staff);
+  document.getElementById('bd-patients').textContent=fmt(r.patients);
+  document.getElementById('bd-denials').textContent=fmt(r.denials);
+  document.getElementById('bd-total').textContent=fmt(r.benefit);
+  const ann=gi('annual-cost');const impl=gi('impl-cost');
+  const yrs=[{l:'Yr 1',net:r.benefit-(impl+ann)},{l:'Yr 2',net:r.benefit-ann},{l:'Yr 3',net:r.benefit-ann}];
+  const maxV=Math.max(...yrs.map(y=>Math.abs(y.net)),1);
+  document.getElementById('r-timeline').innerHTML=yrs.map(y=>`<div class="tl-row"><div class="tl-label">${y.l}</div><div class="tl-track"><div class="tl-bar" style="background:${y.net>=0?'var(--teal)':'var(--red)'};width:0%" data-w="${Math.round(Math.abs(y.net)/maxV*100)}"><span>${fmt(y.net)}</span></div></div><div class="tl-val">${fmt(r.benefit)} in</div></div>`).join('');
+  setTimeout(()=>document.querySelectorAll('.tl-bar[data-w]').forEach(b=>b.style.width=b.dataset.w+'%'),150);
+
+  window._aiContext = {tool:'AutomationROIBuilder',workflowType:document.getElementById('auto-type').value,annualBenefit:r.benefit,staffSavings:r.staff,patientRevenue:r.patients,denialRecovery:r.denials,year1Cost:r.yr1,paybackMonths:r.pb,threeYearNetROI:r.net3,roiPct:roi};
+  var _k = localStorage.getItem('anthropic_key');
+  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+}
+applyDefaults();
+
+async function getAIRecs(context, apiKey) {
+  var body = document.getElementById('ai-recs-body');
+  body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'You are a healthcare operations expert. A specialty care operator just completed a diagnostic. Their data: ' + JSON.stringify(context) + ' Give 3 specific, actionable recommendations. Format as JSON array: [{"title":"...","desc":"...","impact":"..."}]'
+        }]
+      })
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Invalid response');
+    var recs = JSON.parse(match[0]);
+    body.innerHTML = recs.map(function(r) {
+      return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
+    }).join('');
+  } catch(e) {
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+  }
+}
+
+function showAIKeyPrompt() {
+  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
+}
+
+function runAIRecs() {
+  var input = document.getElementById('ai-key-input');
+  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  localStorage.setItem('anthropic_key', key);
+  getAIRecs(window._aiContext || {}, key);
+}
+</script>
+</body>
+</html>
