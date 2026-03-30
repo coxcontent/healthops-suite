@@ -332,21 +332,17 @@ function submit(){
     </div>`).join('');
 
   window._aiContext = {tool:'BuildVsBuy',recommendation:winner,buyScore:scores.buy,configScore:scores.config,buildScore:scores.build,answeredQuestions:QUESTIONS.filter(q=>A[q]).length};
-  var _k = localStorage.getItem('anthropic_key');
-  if (_k) { getAIRecs(window._aiContext, _k); } else { showAIKeyPrompt(); }
+  getAIRecs(window._aiContext);
 }
 
-async function getAIRecs(context, apiKey) {
+async function getAIRecs(context) {
   var body = document.getElementById('ai-recs-body');
   body.innerHTML = '<div class="ai-loading">Generating recommendations\u2026</div>';
   try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var res = await fetch('https://healthops-ai-proxy.ryan-577.workers.dev/', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -367,20 +363,8 @@ async function getAIRecs(context, apiKey) {
       return '<div class="ai-rec-item"><div class="ai-rec-title">' + r.title + '</div><div class="ai-rec-desc">' + r.desc + '</div><div class="ai-rec-impact">' + r.impact + '</div></div>';
     }).join('');
   } catch(e) {
-    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Check your API key and try again.</div><button class="btn btn-ghost" onclick="showAIKeyPrompt()" style="margin-top:.5rem">Try Again</button>';
+    body.innerHTML = '<div class="ai-error">Could not generate recommendations. Please try again.</div>';
   }
-}
-
-function showAIKeyPrompt() {
-  document.getElementById('ai-recs-body').innerHTML = '<div class="ai-key-wrap"><p class="ai-key-note">Enter your Anthropic API key to get AI-powered recommendations based on your results.</p><input class="ai-key-input" id="ai-key-input" type="password" placeholder="sk-ant-..."><button class="btn btn-primary" onclick="runAIRecs()" style="align-self:flex-start;margin-top:.25rem">Get Recommendations</button></div>';
-}
-
-function runAIRecs() {
-  var input = document.getElementById('ai-key-input');
-  var key = (input && input.value.trim()) || localStorage.getItem('anthropic_key') || '';
-  if (!key) { alert('Please enter your Anthropic API key.'); return; }
-  localStorage.setItem('anthropic_key', key);
-  getAIRecs(window._aiContext || {}, key);
 }
 </script>
 </body>
